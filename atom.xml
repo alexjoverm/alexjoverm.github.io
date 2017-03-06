@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-03-06T16:59:39.000Z</updated>
+  <updated>2017-03-06T17:03:22.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -20,11 +20,11 @@
     <link href="http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/"/>
     <id>http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/</id>
     <published>2017-03-06T09:37:33.000Z</published>
-    <updated>2017-03-06T16:59:39.000Z</updated>
+    <updated>2017-03-06T17:03:22.000Z</updated>
     
     <content type="html"><![CDATA[<p>We’ll see here how to setup <a href="https://webpack.js.org" target="_blank" rel="external">Webpack 2</a>, along with <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> and <a href="https://babeljs.io/" target="_blank" rel="external">Babel</a> to achieve dead code elimination with tree-shaking.</p>
 <a id="more"></a>
-<p>Last weekend I updated <a href="https://github.com/alexjoverm/typescript-library-starter" target="_blank" rel="external">typescript-library-starter</a>, a zero-config starter repo for writting a <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a>  library, with <a href="https://webpack.js.org/guides/tree-shaking" target="_blank" rel="external">tree-shaking</a>, <a href="https://github.com/babel/babel-preset-env" target="_blank" rel="external">babel-preset-env</a>, and more optimizations.</p>
+<p>Last weekend I updated <a href="https://github.com/alexjoverm/typescript-library-starter" target="_blank" rel="external">typescript-library-starter</a>, a zero-config starter repo for writting a <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a>  library, with <a href="https://webpack.js.org/guides/tree-shaking" target="_blank" rel="external">tree-shaking</a>, <a href="https://github.com/babel/babel-preset-env" target="_blank" rel="external">babel-preset-env</a>, and more:</p>
 <div class="twitter-wrapper"><blockquote class="twitter-tweet"><a href="https://twitter.com/alexjoverm/status/838681719993663488" target="_blank" rel="external"></a></blockquote></div><script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 <p>So I thought, why not sharing that to the people? Hope you find it useful and safes you some time I had to spend :)</p>
 <h2 id="What-is-really-tree-shaking"><a href="#What-is-really-tree-shaking" class="headerlink" title="What is really tree-shaking?"></a>What is really tree-shaking?</h2><img src="/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/tree.jpeg" alt="Tree" title="Tree">
@@ -85,7 +85,7 @@
 <span class="token comment" spellcheck="true">/* harmony export (immutable) */</span> __webpack_exports__<span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span> <span class="token operator">=</span> sayHello<span class="token punctuation">;</span>
 <span class="token comment" spellcheck="true">// This function isn't used anywhere</span>
 <span class="token keyword">function</span> <span class="token function">sayBye</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
-  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Hello'</span><span class="token punctuation">)</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Bye'</span><span class="token punctuation">)</span>
 <span class="token punctuation">}</span>
 <span class="token operator">...</span>
 </code></pre>
