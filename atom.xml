@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-03-06T17:03:22.000Z</updated>
+  <updated>2017-03-24T15:58:49.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -14,6 +14,76 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Apollo, GraphQL, Vue and Nuxt shenanigans!</title>
+    <link href="http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/"/>
+    <id>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</id>
+    <published>2017-03-23T09:46:07.000Z</published>
+    <updated>2017-03-24T15:58:49.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>What could go wrong by building a hackaton project with <a href="http://dev.apollodata.com/" target="_blank" rel="external">Apollo</a>, <a href="http://graphql.org" target="_blank" rel="external">GraphQL</a>, <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> and <a href="https://nuxtjs.org/" target="_blank" rel="external">Nuxt</a>?</p>
+<a id="more"></a>
+<img src="/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/hackaton.jpg" alt="Hackaton" title="Hackaton">
+<p>Last Friday 17th March 2017, <a href="https://twitter.com/josepramon" target="_blank" rel="external">@josepramon</a>, <a href="https://twitter.com/esclapes" target="_blank" rel="external">@esclapes</a> and I participated together in an internal hackaton of <a href="https://www.coosto.com/en/" target="_blank" rel="external">Coosto</a>. The topic was to create something with the topic “Eindhoven”. It was nice to see the variety of projects presented.</p>
+<p>We wanted to play with <a href="http://dev.apollodata.com/" target="_blank" rel="external">Apollo</a>, <a href="http://graphql.org" target="_blank" rel="external">GraphQL</a>, and server-side rendering in <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> (with <a href="https://nuxtjs.org/" target="_blank" rel="external">Nuxt</a>), to get a feeling on whether it is beneficial to introduce them in the company. So we made <a href="https://github.com/esclapes/coosto-hackathon" target="_blank" rel="external">Dog shit</a>, an app that collects data from <a href="https://data.eindhoven.nl/pages/home/" target="_blank" rel="external">Eindhoven Open Data</a> and <a href="https://developers.google.com/places" target="_blank" rel="external">Google Places API</a> in order to show places in Eindhoven where you can walk your dog, and what’s around.</p>
+<p>You can find the result <a href="https://github.com/esclapes/coosto-hackathon" target="_blank" rel="external">project on Github</a>. It has the following architecture:</p>
+<img src="/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/diagram.jpg" alt="Dog Shit architecture" title="Dog Shit architecture">
+<p><em>Note: opinions in the article are personal and based on this experienced</em></p>
+<h3 id="GraphQL"><a href="#GraphQL" class="headerlink" title="GraphQL"></a>GraphQL</h3><p><strong><a href="http://graphql.org" target="_blank" rel="external">GraphQL</a></strong> is a query language spec that Facebook developed on 2012. It serves exactly one purpose, and it does it really well:</p>
+<blockquote><p>I’ll give the frontend what it’s asking for, and I’ll take care of getting that data in the best way</p>
+</blockquote>
+<p>It definitely nails that, we were amazed by how powerful is that and how pleasant the developer experience was. GraphQL:</p>
+<ul>
+<li>Gives you <strong>introspection</strong> and <strong>docs</strong>, given the Json/TypeScript-like language nature. It has a <a href="http://graphql.org/learn/serving-over-http/#graphiql" target="_blank" rel="external">GraphiQL</a> playground system where you can try your queries and see what they expect and return, powerful for development and testing.</li>
+<li>There are <a href="http://graphql.org/code/" target="_blank" rel="external">implementations for most of languages</a></li>
+<li>Optimized and scalable for that purpose, offering caching and pagination among others.</li>
+</ul>
+<p>GraphQL is an intermediate layer between your frontend and your backend. That has some <strong>advantages</strong>:</p>
+<ul>
+<li>You can query/return different data for different frontends. Imagine: your mobile app probably needs less data than your web app, or it needs it with another structure</li>
+<li>Helps refactoring legacy systems or moving to microservices, since it acts as a <a href="http://samnewman.io/patterns/architectural/bff/" target="_blank" rel="external">BFF</a> and takes on some responsibilities of an <a href="http://microservices.io/patterns/apigateway.html" target="_blank" rel="external">API Gateway</a> to decouple frontend and backend</li>
+</ul>
+<p>It is the perfect replacement for traditional homemade BFFs, so you don’t have to:</p>
+<ul>
+<li>Build a BFF per frontend (GraphQL allows you to query the data you want)</li>
+<li>Define hard-contracts between frontend and backend which you have to maintain (unless you build an spec/convention, which would mean building GraphQL from scratch on your own)</li>
+<li>Optimize it for the purpose (GraphQL is made for that)</li>
+</ul>
+<h3 id="Apollo"><a href="#Apollo" class="headerlink" title="Apollo"></a>Apollo</h3><p>Here again, the experience was quite positive, it complements GraphQL with everything you need.</p>
+<p>Apollo is a production ready toolset that powers-up GraphQL. It gives you:</p>
+<ul>
+<li><a href="http://dev.apollodata.com/" target="_blank" rel="external">GraphQL clients</a> for Android, iOS, Javascript, React, Angular…</li>
+<li><a href="http://dev.apollodata.com/tools/#GraphQL-server-amp-tools" target="_blank" rel="external">A production-ready server</a> which extends <a href="http://graphql.org/graphql-js/" target="_blank" rel="external">GraphQL.js server</a></li>
+<li><a href="http://dev.apollodata.com/tools/#GraphQL-server-amp-tools" target="_blank" rel="external">Subscriptions</a>, useful for real-time events. This feature feels like still needs some love by the date of writing.</li>
+</ul>
+<p>One note, the docs were a bit misleading, not by content but more about the structure. For example if was hard to find a simple get started or docs for the apollo client.</p>
+<p>We tried <a href="https://github.com/Akryum/vue-apollo" target="_blank" rel="external">vue-apollo</a>, but we didn’t have good experience with it. It is quite opinionated and does some magic, but you lose a lot of control. For our case the <a href="https://github.com/apollographql/apollo-client" target="_blank" rel="external">Apollo Javascript client</a> worked better.</p>
+<h3 id="Nuxt"><a href="#Nuxt" class="headerlink" title="Nuxt"></a>Nuxt</h3><p>We felt the power and easyness of Nuxt, but also we got a sour-sweet experience here, let me elaborate on that.</p>
+<p><a href="https://nuxtjs.org/" target="_blank" rel="external">Nuxt</a> is a higher-level framework for writing universal Vue applications. It makes very easy to achieve server side rendering and you don’t have to worry about any of the <a href="https://vuejs.org/v2/guide/ssr.html#Build-Process-Routing-and-Vuex-State-Hydration" target="_blank" rel="external">server side rendering considerations</a> such as caching, routing, state, build process, etc. It is driven by conventions which is what makes very easy to don’t care about most things an let the framework manage that.</p>
+<p>Those conventions have their pitfalls: when you need something more flexible and more control that you cannot fit to those conventions, then it is not the right tool for you. In our case this is true.</p>
+<p>The bottom line is if you can stick to the conventions, is perfect for you. Otherwise you must manage the server side rendering yourself. In the <a href="https://vuejs.org/v2/guide/ssr.html#Build-Process-Routing-and-Vuex-State-Hydration" target="_blank" rel="external">Vue docs</a> you can find some resources to master this for complex applications.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>There are some areas that we didn’t have time for it, such as integrating a state management tool (Redux or Vuex), so we covered the basics in this experiment.</p>
+<p>We found Apollo/GraphQL as a very powerful tool for medium and large apps, it does really well what is made for. Nuxt makes building universal Vue apps be a kid game, but first check if it fits properly with your project. Tools that strongly integrate technologies, such as vue-apollo or Nuxt itself, have their advantages, but first check if they are the best solution for your case. If not, you can always use the “raw” tools.</p>
+<p>Any questions? Post them below or reach me in Twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Don’t hesitate to sharing it!</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;What could go wrong by building a hackaton project with &lt;a href=&quot;http://dev.apollodata.com/&quot;&gt;Apollo&lt;/a&gt;, &lt;a href=&quot;http://graphql.org&quot;&gt;GraphQL&lt;/a&gt;, &lt;a href=&quot;https://vuejs.org/&quot;&gt;Vue&lt;/a&gt; and &lt;a href=&quot;https://nuxtjs.org/&quot;&gt;Nuxt&lt;/a&gt;?&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="GraphQL" scheme="http://alexjoverm.github.io/tags/GraphQL/"/>
+    
+      <category term="Apollo" scheme="http://alexjoverm.github.io/tags/Apollo/"/>
+    
+      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+    
+      <category term="Personal" scheme="http://alexjoverm.github.io/tags/Personal/"/>
+    
+  </entry>
   
   <entry>
     <title>Tree shaking with Webpack 2, TypeScript and Babel</title>
