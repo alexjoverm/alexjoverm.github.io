@@ -1,0 +1,63 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Alex Jover Morales"><link rel="icon" href="/alex.jpg"><title>Alex Jover</title><meta name="description" content="Articles about modern javascript tips, tools, and tricks!"><link rel="alternate" type="application/rss+xml" title="Alex Jover" href="/atom.xml"><link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"><link rel="stylesheet" href="/css/bootstrap.min.css"><link rel="stylesheet" href="/css/main.css"><link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700"><link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css"></head><body><nav class="navbar navbar-default navbar-fixed-top navbar-custom"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#main-navbar" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Blog</a></div><div id="main-navbar" class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right"><li><a href="/archives">Archive</a></li><li><a href="/tags">Tags</a></li><li><a href="/about">About</a></li></ul></div><div class="avatar-container"><div class="avatar-img-border"><a href="/"><img src="/alex.jpg" class="avatar-img"></a></div></div></div></div></div></nav><header class="header-section"><div class="intro-header no-img"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="post-heading"><h1>TypeScript Lookup Types: type-safe properties</h1><p class="post-meta">Posted on Apr 11 2017 · <a href="/tags/TypeScript/" class="tag post-meta">TypeScript</a> · <a href="/tags/Jest/" class="tag post-meta">Jest</a></p></div></div></div></div></div></header><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><article role="main" class="blog-post"><p>Typescript 2.1 introduced lookup types. What are they for? In which cases are they useful?</p>
+<a id="more"></a>
+<p>That’s something I was wondering for a while. I read <a href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html" target="_blank" rel="external">the official docs</a> and <a href="https://blog.mariusschulz.com/2017/01/06/typescript-2-1-keyof-and-lookup-types" target="_blank" rel="external">Marius Schulz post</a> where quite well explain it, but didn’t quite get the use of it. I needed to come across a real world case where I had to use it.</p>
+<p>Then I made a <a href="https://github.com/DefinitelyTyped/DefinitelyTyped/pull/14867" target="_blank" rel="external">PR to Jest on DefinitelyTyped</a> repository for adding the <code>spyOn</code> function introduced in Jest 19. That’s when I got the grasp of it and finally understood it.</p>
+<h2 id="What-exactly-are-Lookup-types"><a href="#What-exactly-are-Lookup-types" class="headerlink" title="What exactly are Lookup types?"></a>What exactly are Lookup types?</h2><p>Basically a lookup type defines an indexed property type of another type. They are created using the <code>keyof</code> operator, which returns an union of string literals:</p>
+<pre class=" language-typescript"><code class="language-typescript"><span class="token comment" spellcheck="true">// Given a Bike type</span>
+<span class="token keyword">interface</span> <span class="token class-name">Bike</span> <span class="token punctuation">{</span>
+  model<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">,</span>
+  weight<span class="token punctuation">:</span> <span class="token keyword">number</span>
+  ride<span class="token punctuation">:</span> <span class="token keyword">Function</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// Get all prop names of Bike</span>
+type BikePropNames <span class="token operator">=</span> keyof Bike <span class="token comment" spellcheck="true">// "model" | "weight" | "ride"</span>
+
+<span class="token comment" spellcheck="true">// We can get the all prop types of Bike as well</span>
+type BikePropTypes <span class="token operator">=</span> Bike<span class="token punctuation">[</span>BikePropNames<span class="token punctuation">]</span> <span class="token comment" spellcheck="true">// "string" | "number" | "Function"</span>
+</code></pre>
+<p>Typescript infers the string literals by looking up on the types used, either for the <code>keyof</code> operator and element access.</p>
+<h3 id="OK…-But-when-can-this-be-useful"><a href="#OK…-But-when-can-this-be-useful" class="headerlink" title="OK… But when can this be useful?"></a>OK… But when can this be useful?</h3><p>Let’s take the <code>jest.spyOn</code> function, as an example. The function works takes an object as a first parameter, and the method you wanna spy on as a second parameter. I’ve <a href="https://github.com/DefinitelyTyped/DefinitelyTyped/pull/14867/commits/46f23ff159f5944f09d366b4385b4df9bcef3ed2" target="_blank" rel="external">first wrote</a> it like this:</p>
+<pre class=" language-typescript"><code class="language-typescript"><span class="token keyword">function</span> <span class="token function">spyOn</span><span class="token punctuation">(</span>object<span class="token punctuation">:</span> <span class="token keyword">any</span><span class="token punctuation">,</span> method<span class="token punctuation">:</span> <span class="token keyword">string</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Yes, this would work. But what if, given the <code>Bike</code> example, I use a non-existent method as a second parameter?</p>
+<pre class=" language-typescript"><code class="language-typescript"><span class="token keyword">const</span> bike<span class="token punctuation">:</span> Bike <span class="token operator">=</span> <span class="token punctuation">{</span>
+  model<span class="token punctuation">:</span> <span class="token string">'Orbea X5'</span><span class="token punctuation">,</span>
+  weigth<span class="token punctuation">:</span> <span class="token number">10</span><span class="token punctuation">,</span>
+  ride<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'riding!!'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment" spellcheck="true">// No TS error, but it would fail, since 'blabla' is not a method of bike</span>
+<span class="token function">spyOn</span><span class="token punctuation">(</span>bike<span class="token punctuation">,</span> <span class="token string">'blabla'</span><span class="token punctuation">)</span>
+</code></pre>
+<p>This is not type-safe, ts will not complain at all. How can we do this type-safe?</p>
+<pre class=" language-typescript"><code class="language-typescript"><span class="token keyword">function</span> spyOn<span class="token operator">&lt;</span>O<span class="token punctuation">,</span> M <span class="token keyword">extends</span> <span class="token class-name">keyof</span> O<span class="token operator">></span><span class="token punctuation">(</span>object<span class="token punctuation">:</span> O<span class="token punctuation">,</span> method<span class="token punctuation">:</span> M<span class="token punctuation">)</span>
+
+<span class="token operator">...</span>
+
+<span class="token function">spyOn</span><span class="token punctuation">(</span>bike<span class="token punctuation">,</span> <span class="token string">'blabla'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// now TS throws an error :)</span>
+<span class="token function">spyOn</span><span class="token punctuation">(</span>bike<span class="token punctuation">,</span> <span class="token string">'ride'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// This works</span>
+</code></pre>
+<p>Do you see now the power of lookup types? You can dynamically generate string literal union types! That’ll make your type definitions much more accurate ;)</p>
+<p>If you like it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
+</article><ul class="pager blog-pager"><li class="next"><a href="/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/" data-toggle="tooltip" data-placement="top" title="Apollo, GraphQL, Vue and Nuxt shenanigans!">Next Post →</a></li></ul><div class="disqus-comments"><div class="comments"><div id="disqus_thread"></div></div></div><script>var url_parts = window.location.href.split("?");
+var disqus_url = url_parts[0];
+(function () {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = "//alexjm-blog.disqus.com/embed.js";
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script></div></div></div><footer><div class="container beautiful-jekyll-footer"><div class="row"><p class="copyright text-muted">© Alex Jover Morales • 2017</p></div></div></footer><script src="/js/jquery-1.11.2.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/main.js"></script><script>(function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+ga('create', 'UA-93226517-1', 'auto');
+ga('send', 'pageview');</script></body></html>
