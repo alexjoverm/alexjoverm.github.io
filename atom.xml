@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-04-11T14:21:19.000Z</updated>
+  <updated>2017-04-11T14:29:05.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -20,12 +20,12 @@
     <link href="http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/"/>
     <id>http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/</id>
     <published>2017-04-11T10:55:23.000Z</published>
-    <updated>2017-04-11T14:21:19.000Z</updated>
+    <updated>2017-04-11T14:29:05.000Z</updated>
     
     <content type="html"><![CDATA[<p>Typescript 2.1 introduced lookup types. What are they for? In which cases are they useful?</p>
 <a id="more"></a>
-<p>That’s something I was wondering for a while. I read <a href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html" target="_blank" rel="external">the official docs</a> and <a href="https://blog.mariusschulz.com/2017/01/06/typescript-2-1-keyof-and-lookup-types" target="_blank" rel="external">Marius Schulz post</a> where quite well explain it, but didn’t quite get the use of it. I needed to come across a real world case where I had to use it.</p>
-<p>Then I made a <a href="https://github.com/DefinitelyTyped/DefinitelyTyped/pull/14867" target="_blank" rel="external">PR to Jest on DefinitelyTyped</a> repository for adding the <code>spyOn</code> function introduced in Jest 19. That’s when I got the grasp of it and finally understood it.</p>
+<p>That’s something I was wondering for a while. I read <a href="https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-1.html" target="_blank" rel="external">the official docs</a> and <a href="https://blog.mariusschulz.com/2017/01/06/typescript-2-1-keyof-and-lookup-types" target="_blank" rel="external">Marius Schulz post</a> where quite well explain it, but didn’t totally get the use of it. I needed to come across a real world case where I had to use it.</p>
+<p>Then I made a <a href="https://github.com/DefinitelyTyped/DefinitelyTyped/pull/14867" target="_blank" rel="external">PR to Jest on DefinitelyTyped</a> repository for adding the <code>spyOn</code> function introduced in <a href="https://facebook.github.io/jest/" target="_blank" rel="external">Jest 19</a>. That’s when I finally understood it.</p>
 <h2 id="What-exactly-are-Lookup-types"><a href="#What-exactly-are-Lookup-types" class="headerlink" title="What exactly are Lookup types?"></a>What exactly are Lookup types?</h2><p>Basically a lookup type defines an indexed property type of another type. They are created using the <code>keyof</code> operator, which returns an union of string literals:</p>
 <pre class=" language-typescript"><code class="language-typescript"><span class="token comment" spellcheck="true">// Given a Bike type</span>
 <span class="token keyword">interface</span> <span class="token class-name">Bike</span> <span class="token punctuation">{</span>
@@ -62,6 +62,11 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
 <span class="token function">spyOn</span><span class="token punctuation">(</span>bike<span class="token punctuation">,</span> <span class="token string">'blabla'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// now TS throws an error :)</span>
 <span class="token function">spyOn</span><span class="token punctuation">(</span>bike<span class="token punctuation">,</span> <span class="token string">'ride'</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// This works</span>
 </code></pre>
+<p>If you still don’t understand the <code>spyOn</code> declaration, basically is saying:</p>
+<ul>
+<li><code>&lt;O, M extends keyof O&gt;</code>: <code>O</code> is any object, and <code>M</code> is a property of <code>O</code></li>
+<li><code>object: O, method: M</code>: we expect <code>O</code> (any object) as a first parameter, and <code>M</code> (a property of <code>O</code> as a second)</li>
+</ul>
 <p>Do you see now the power of lookup types? You can dynamically generate string literal union types! That’ll make your type definitions much more accurate ;)</p>
 <p>If you like it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
 ]]></content>
