@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/</loc>
+    
+    <lastmod>2017-05-29T21:44:05.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/</loc>
     
     <lastmod>2017-04-11T14:29:05.000Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</loc>
     
     <lastmod>2017-03-24T15:58:49.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/</loc>
-    
-    <lastmod>2017-03-06T17:03:22.000Z</lastmod>
     
   </url>
   
