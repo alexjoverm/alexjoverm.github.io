@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-06-05T12:24:11.000Z</updated>
+  <updated>2017-06-12T16:25:57.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -14,6 +14,61 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Use Prettier with TSLint and be happy</title>
+    <link href="http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/"/>
+    <id>http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/</id>
+    <published>2017-06-12T14:36:23.000Z</published>
+    <updated>2017-06-12T16:25:57.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/prettier/prettier" target="_blank" rel="external">Prettier</a> support for <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> just landed. Let’s see how <a href="https://github.com/alexjoverm/tslint-config-prettier" target="_blank" rel="external">tslint-config-prettier</a> helps to seamlessly combine it with <a href="https://palantir.github.io/tslint/" target="_blank" rel="external">TSLint</a>.</p>
+<a id="more"></a>
+<img src="/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/parrot.jpg" alt="Parrot image" title="Parrot image">
+<p>Recently, <a href="https://twitter.com/Vjeux" target="_blank" rel="external">@vjeux</a>, one of the authors of Prettier, announced TypeScript support in the following tweet:</p>
+<div class="twitter-wrapper"><blockquote class="twitter-tweet"><a href="https://twitter.com/Vjeux/status/870670634908475392" target="_blank" rel="external"></a></blockquote></div><script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>That’s pretty amazing! I’ve just went and tried it out. I was so impressed by how magic the experience was that I’ve <a href="https://twitter.com/alexjoverm/status/871765191721197568" target="_blank" rel="external">completely removed TSLint</a> from <a href="https://github.com/alexjoverm/typescript-library-starter" target="_blank" rel="external">TypeScript library starter</a>.</p>
+<h2 id="The-problem"><a href="#The-problem" class="headerlink" title="The problem"></a>The problem</h2><p>Prettier and TSLint collide, since they both take care of formatting. For the following code, TSLint will give us the error <code>[tslint] Multiple spaces found before &#39;{&#39;. (no-multi-spaces)</code>:</p>
+<pre class=" language-typescript"><code class="language-typescript"><span class="token keyword">class</span> <span class="token class-name">DummyClass</span>      <span class="token punctuation">{</span>
+  food <span class="token operator">=</span> <span class="token string">'sandwitch'</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>But, when we run Prettier, the code is automatically formatted:</p>
+<pre class=" language-typescript"><code class="language-typescript"><span class="token keyword">class</span> <span class="token class-name">DummyClass</span> <span class="token punctuation">{</span>
+  food <span class="token operator">=</span> <span class="token string">'sandwitch'</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>This makes the workflow pretty useless, since we’re getting linting errors that Prettier will solve.</p>
+<h2 id="The-solution"><a href="#The-solution" class="headerlink" title="The solution"></a>The solution</h2><p>It’s very simple:</p>
+<blockquote>
+<p>Let Prettier take care of code formatting, and TSLint of the rest</p>
+</blockquote>
+<p>That’s why I’ve created <a href="https://github.com/alexjoverm/tslint-config-prettier" target="_blank" rel="external">tslint-config-prettier</a>. It disables all TSLint formatting related rules, as well as for <a href="https://github.com/palantir/tslint-react" target="_blank" rel="external">tslint-react</a> and <a href="https://github.com/buzinas/tslint-eslint-rules" target="_blank" rel="external">tslint-eslint-rules</a>.</p>
+<p>The installation is straightforward, once you setup <a href="https://palantir.github.io/tslint/" target="_blank" rel="external">TSLint</a> and <a href="https://github.com/prettier/prettier" target="_blank" rel="external">Prettier</a>:</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">npm</span> i -D tslint-config-prettier
+</code></pre>
+<p>Then add it to the end of your <code>tslint.json</code> file:</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"extends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">"tslint:latest"</span><span class="token punctuation">,</span>
+    <span class="token string">"tslint-config-prettier"</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>I must thank <a href="https://twitter.com/Vjeux/status/871796320792608768" target="_blank" rel="external">@vjeux for pointing me out</a> to this solution and <a href="https://twitter.com/JBlaak" target="_blank" rel="external">@JBlack</a> for the time to <a href="https://github.com/alexjoverm/tslint-config-prettier/pull/1" target="_blank" rel="external">review tslint-config-prettier</a>.</p>
+<p>If you liked it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;&lt;a href=&quot;https://github.com/prettier/prettier&quot;&gt;Prettier&lt;/a&gt; support for &lt;a href=&quot;https://www.typescriptlang.org/&quot;&gt;TypeScript&lt;/a&gt; just landed. Let’s see how &lt;a href=&quot;https://github.com/alexjoverm/tslint-config-prettier&quot;&gt;tslint-config-prettier&lt;/a&gt; helps to seamlessly combine it with &lt;a href=&quot;https://palantir.github.io/tslint/&quot;&gt;TSLint&lt;/a&gt;.&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
+    
+  </entry>
   
   <entry>
     <title>TypeScript Lookup Types: type-safe properties</title>
@@ -241,9 +296,9 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
-      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
-    
       <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
+    
+      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
     
   </entry>
   

@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/</loc>
+    
+    <lastmod>2017-06-12T16:25:57.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/about/index.html</loc>
     
     <lastmod>2017-06-05T12:28:01.000Z</lastmod>
