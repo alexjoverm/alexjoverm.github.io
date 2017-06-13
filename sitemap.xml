@@ -2,9 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/</loc>
+    
+    <lastmod>2017-06-13T10:16:48.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/</loc>
     
-    <lastmod>2017-06-13T08:11:24.000Z</lastmod>
+    <lastmod>2017-06-13T10:16:15.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</loc>
+    
+    <lastmod>2017-06-13T10:15:37.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/</loc>
+    
+    <lastmod>2017-06-13T09:36:24.000Z</lastmod>
     
   </url>
   
@@ -12,27 +33,6 @@
     <loc>http://alexjoverm.github.io/about/index.html</loc>
     
     <lastmod>2017-06-05T12:28:01.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/</loc>
-    
-    <lastmod>2017-06-05T12:24:11.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/</loc>
-    
-    <lastmod>2017-06-05T12:21:24.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</loc>
-    
-    <lastmod>2017-03-24T15:58:49.000Z</lastmod>
     
   </url>
   
