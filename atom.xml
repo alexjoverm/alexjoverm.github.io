@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-06-12T16:25:57.000Z</updated>
+  <updated>2017-06-13T08:11:24.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -20,11 +20,10 @@
     <link href="http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/"/>
     <id>http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/</id>
     <published>2017-06-12T14:36:23.000Z</published>
-    <updated>2017-06-12T16:25:57.000Z</updated>
+    <updated>2017-06-13T08:11:24.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://github.com/prettier/prettier" target="_blank" rel="external">Prettier</a> support for <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> just landed. Let’s see how <a href="https://github.com/alexjoverm/tslint-config-prettier" target="_blank" rel="external">tslint-config-prettier</a> helps to seamlessly combine it with <a href="https://palantir.github.io/tslint/" target="_blank" rel="external">TSLint</a>.</p>
 <a id="more"></a>
-<img src="/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/parrot.jpg" alt="Parrot image" title="Parrot image">
 <p>Recently, <a href="https://twitter.com/Vjeux" target="_blank" rel="external">@vjeux</a>, one of the authors of Prettier, announced TypeScript support in the following tweet:</p>
 <div class="twitter-wrapper"><blockquote class="twitter-tweet"><a href="https://twitter.com/Vjeux/status/870670634908475392" target="_blank" rel="external"></a></blockquote></div><script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 <p>That’s pretty amazing! I’ve just went and tried it out. I was so impressed by how magic the experience was that I’ve <a href="https://twitter.com/alexjoverm/status/871765191721197568" target="_blank" rel="external">completely removed TSLint</a> from <a href="https://github.com/alexjoverm/typescript-library-starter" target="_blank" rel="external">TypeScript library starter</a>.</p>
@@ -47,7 +46,7 @@
 <p>The installation is straightforward, once you setup <a href="https://palantir.github.io/tslint/" target="_blank" rel="external">TSLint</a> and <a href="https://github.com/prettier/prettier" target="_blank" rel="external">Prettier</a>:</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token function">npm</span> i -D tslint-config-prettier
 </code></pre>
-<p>Then add it to the end of your <code>tslint.json</code> file:</p>
+<p>Add it to the end of your <code>tslint.json</code> file:</p>
 <pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
   <span class="token property">"extends"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
     <span class="token string">"tslint:latest"</span><span class="token punctuation">,</span>
@@ -55,6 +54,8 @@
   <span class="token punctuation">]</span>
 <span class="token punctuation">}</span>
 </code></pre>
+<p>Now we can use Prettier and TSLint without any problem!</p>
+<img src="/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/prettier.gif" alt="Using Prettier" title="Using Prettier">
 <p>I must thank <a href="https://twitter.com/Vjeux/status/871796320792608768" target="_blank" rel="external">@vjeux for pointing me out</a> to this solution and <a href="https://twitter.com/JBlaak" target="_blank" rel="external">@JBlack</a> for the time to <a href="https://github.com/alexjoverm/tslint-config-prettier/pull/1" target="_blank" rel="external">review tslint-config-prettier</a>.</p>
 <p>If you liked it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
 ]]></content>
