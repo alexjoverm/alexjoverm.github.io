@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-06-16T15:42:53.000Z</updated>
+  <updated>2017-06-28T17:30:19.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -14,6 +14,110 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Integrate TypeScript in your Vue project</title>
+    <link href="http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/"/>
+    <id>http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/</id>
+    <published>2017-06-28T09:17:45.000Z</published>
+    <updated>2017-06-28T17:30:19.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>You have a <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> project and you heard about all things <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> can help you with. You decide to start using TypeScript. Here you’ll see how to do that in an approachable and pragmatic way.</p>
+<a id="more"></a>
+<img src="/2017/06/28/Integrate-TypeScript-in-your-Vue-project/love.jpg" alt="Love" title="Love">
+<p>In this article we’ll assume you’re using SFC (Single File Components), but it could work as well even if you’re splitting them into multiple files. So… let’s get started!</p>
+<h2 id="Integrating-TypeScript"><a href="#Integrating-TypeScript" class="headerlink" title="Integrating TypeScript"></a>Integrating TypeScript</h2><p>We’re gonna start from <a href="https://github.com/vuejs-templates/webpack" target="_blank" rel="external">Vue CLI Webpack’s template</a>, but it would work as well with the amazing <a href="https://github.com/vuejs-templates/pwa" target="_blank" rel="external">PWA template</a>. Don’t choose to use ESLint when you’re ask to:</p>
+<pre class=" language-bash"><code class="language-bash">vue init webpack my-app <span class="token comment" spellcheck="true"># or: vue init pwa my-app</span>
+<span class="token function">cd</span> my-app
+</code></pre>
+<p>We have to do 4 steps:</p>
+<h3 id="1-Create-a-tsconfig-json-file"><a href="#1-Create-a-tsconfig-json-file" class="headerlink" title="1. Create a tsconfig.json file"></a>1. Create a <code>tsconfig.json</code> file</h3><p>Let’s start with something very simple, later we’ll get back to the TypeScript configuration.</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"compilerOptions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"lib"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"dom"</span><span class="token punctuation">,</span> <span class="token string">"es5"</span><span class="token punctuation">,</span> <span class="token string">"es2015"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    <span class="token property">"target"</span><span class="token operator">:</span> <span class="token string">"es5"</span><span class="token punctuation">,</span>
+    <span class="token property">"module"</span><span class="token operator">:</span> <span class="token string">"es2015"</span><span class="token punctuation">,</span>
+    <span class="token property">"moduleResolution"</span><span class="token operator">:</span> <span class="token string">"node"</span><span class="token punctuation">,</span>
+    <span class="token property">"sourceMap"</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    <span class="token property">"allowSyntheticDefaultImports"</span><span class="token operator">:</span> <span class="token boolean">true</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>The most important part is the <code>allowSyntheticDefaultImports</code> setting. Since Vue types doesn’t use ES2015 default exports, this setting must be set to by-pass that. You can see more info in <a href="https://code.visualstudio.com/docs/languages/javascript#_common-questions" target="_blank" rel="external">this VSCode docs page</a>.</p>
+<p>Setting <code>&quot;module&quot;: &quot;es2015&quot;</code> would make the code <a href="https://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/">tree-shakeable</a> by producing ESM (EcmaScript Modules).</p>
+<h3 id="2-Add-ts-loader-webpack-plugin"><a href="#2-Add-ts-loader-webpack-plugin" class="headerlink" title="2. Add ts-loader webpack plugin"></a>2. Add <code>ts-loader</code> webpack plugin</h3><p>Install <code>typescript</code> an <code>ts-loader</code> with npm:</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">npm</span> i -D typescript ts-loader
+</code></pre>
+<p>Then open <code>build/webpack.base.conf.js</code>, and place the following code at <strong>the beginning</strong> of <code>module.rules</code>, right before than <code>vue-loader</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript">module<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    rules<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+      <span class="token punctuation">{</span>
+        test<span class="token punctuation">:</span> <span class="token regex">/\.ts$/</span><span class="token punctuation">,</span>
+        exclude<span class="token punctuation">:</span> <span class="token regex">/node_modules|vue\/src/</span><span class="token punctuation">,</span>
+        loader<span class="token punctuation">:</span> <span class="token string">"ts-loader"</span><span class="token punctuation">,</span>
+        options<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+          appendTsSuffixTo<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token operator">/</span>\<span class="token punctuation">.</span>vue$<span class="token operator">/</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token operator">...</span>
+</code></pre>
+<h3 id="3-Add-es-module-true-to-build-vue-loader-conf-js"><a href="#3-Add-es-module-true-to-build-vue-loader-conf-js" class="headerlink" title="3. Add es-module: true to build/vue-loader.conf.js"></a>3. Add <code>es-module: true</code> to <code>build/vue-loader.conf.js</code></h3><p>That will tell vue-loader to use ES instead of CJS (CommonJS) modules, as describe in <a href="https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md#esmodule" target="_blank" rel="external">vue-loader docs</a>:</p>
+<pre class=" language-javascript"><code class="language-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
+  loaders<span class="token punctuation">:</span> utils<span class="token punctuation">.</span><span class="token function">cssLoaders</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+    sourceMap<span class="token punctuation">:</span> isProduction
+      <span class="token operator">?</span> config<span class="token punctuation">.</span>build<span class="token punctuation">.</span>productionSourceMap
+      <span class="token punctuation">:</span> config<span class="token punctuation">.</span>dev<span class="token punctuation">.</span>cssSourceMap<span class="token punctuation">,</span>
+    extract<span class="token punctuation">:</span> isProduction
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+  esModule<span class="token punctuation">:</span> <span class="token boolean">true</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="4-Use-TypeScript-in-files"><a href="#4-Use-TypeScript-in-files" class="headerlink" title="4. Use TypeScript in files"></a>4. Use TypeScript in files</h3><p>So you must do 2 things here:</p>
+<ul>
+<li>Rename <code>.js</code> to <code>.ts</code> extensions within the <code>src</code> folder</li>
+<li>Use <code>lang=&quot;ts&quot;</code> on the <code>script</code> tag of you Vue file. For example in <code>App.vue</code>:</li>
+</ul>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span> <span class="token attr-name">lang</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>ts<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+export default {
+  name: 'app'
+}
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<h3 id="Troubleshooting"><a href="#Troubleshooting" class="headerlink" title="Troubleshooting"></a>Troubleshooting</h3><p>If your editor is yelling at the line <code>import App from &#39;./App&#39;</code> in <code>main.js</code> file about not finding the App module, you can add a <code>vue-shim.d.ts</code> file to your project with the following content:</p>
+<pre class=" language-typescript"><code class="language-typescript"><span class="token keyword">declare</span> <span class="token keyword">module</span> <span class="token string">"*.vue"</span> <span class="token punctuation">{</span>
+  <span class="token keyword">import</span> Vue <span class="token keyword">from</span> <span class="token string">'vue'</span>
+  <span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token keyword">typeof</span> Vue
+<span class="token punctuation">}</span>
+</code></pre>
+<p>I’m using VSCode 1.13.1 and not seeing it, but I’ve seen it before.</p>
+<h2 id="TSLint-Prettier…-Goddess"><a href="#TSLint-Prettier…-Goddess" class="headerlink" title="TSLint, Prettier… Goddess!"></a>TSLint, Prettier… Goddess!</h2><p>I’ve recorded <a href="https://egghead.io/lessons/typescript-use-prettier-with-tslint-without-conflicts-c39670eb" target="_blank" rel="external">a 2 min video on Egghead</a> where I explain how you can set up TSLint with Prettier without any conflicts. Go check it out!</p>
+<h2 id="Ok-I-can-use-TypeScript…-so-now-what’s-next"><a href="#Ok-I-can-use-TypeScript…-so-now-what’s-next" class="headerlink" title="Ok, I can use TypeScript… so now what’s next?"></a>Ok, I can use TypeScript… so now what’s next?</h2><p>At this point, TypeScript could already point you out to some errors you haven’t noticed before by using built-in and third-party types and gives you a better dev experience by using type inference, as explained in <a href="https://slack.engineering/typescript-at-slack-a81307fa288d" target="_blank" rel="external">TypeScript at Slack</a>, an article telling how Slack moved their codebase to TypeScript.</p>
+<p>Still, you must add your own types by using interfaces, types, enums, classes and whatever you need. That way you’ll add more type coverage that TypeScript will use to apply static typing, assuring type safety.</p>
+<p>Ideally, you’d use the TypeScript 2.3 <code>strict</code> compiler option in your <code>tsconfig.json</code> because it’ll bring you the most type safety. <a href="https://twitter.com/mariusschulz" target="_blank" rel="external">Marius Schulz</a> has a [well explained article] (<a href="https://blog.mariusschulz.com/2017/06/09/typescript-2-3-the-strict-compiler-option" target="_blank" rel="external">https://blog.mariusschulz.com/2017/06/09/typescript-2-3-the-strict-compiler-option</a>) about this. By TypeScript 2.3, the strict option is a group of 4 options, but in future releases it could add more:</p>
+<ul>
+<li><code>strictNullChecks</code></li>
+<li><code>noImplicitAny</code></li>
+<li><code>noImplicitThis</code></li>
+<li><code>alwaysStrict</code></li>
+</ul>
+<p>However, in reality, if you have a medium/large codebase, using strict option will make you spend really a huge effort and time solving all the type shortage.</p>
+<p>For that case, a good way to integrate TypeScript is to start with the most flexible configuration, and as you add more type coverage to your codebase, start to enable individually the flags mentioned above, till you get to the point that you can apply the <code>strict</code> option, so you can approach it in a pragmatic way.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>TypeScript brings you type safety to your codebase from the very start, but the more types you define, the more easy to detect bugs and errors and to make the code maintainable. Vue from version 2 is shipped with typings, so we can make use of them. They become more powerful when you use OOP (Object Oriented Programming) in Vue, but will see that in another post.</p>
+<p>If you like it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
+]]></content>
+    
+    <summary type="html">
+    
+      You have a Vue project and you heard about all things TypeScript can help you with. You decide to start using TypeScript. Here you&#39;ll see how to do that in an approachable and pragmatic way.
+    
+    </summary>
+    
+    
+      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+    
+      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
+    
+  </entry>
   
   <entry>
     <title>Use Prettier with TSLint and be happy</title>
@@ -298,9 +402,9 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
-      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
-    
       <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
+    
+      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
     
   </entry>
   
