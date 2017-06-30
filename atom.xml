@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-06-29T08:23:06.000Z</updated>
+  <updated>2017-06-30T20:40:10.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/"/>
     <id>http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/</id>
     <published>2017-06-28T09:17:45.000Z</published>
-    <updated>2017-06-29T08:23:06.000Z</updated>
+    <updated>2017-06-30T20:40:10.000Z</updated>
     
     <content type="html"><![CDATA[<p>You have a <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> project and you heard about all things <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> can help you with. You decide to start using TypeScript. Here you’ll see how to do that in an approachable and pragmatic way.</p>
 <a id="more"></a>
@@ -93,7 +93,7 @@ export default {
 <h2 id="TSLint-Prettier…-Goddess"><a href="#TSLint-Prettier…-Goddess" class="headerlink" title="TSLint, Prettier… Goddess!"></a>TSLint, Prettier… Goddess!</h2><p>I’ve recorded <a href="https://egghead.io/lessons/typescript-use-prettier-with-tslint-without-conflicts-c39670eb" target="_blank" rel="external">a 2 min video on Egghead</a> where I explain how you can set up TSLint with Prettier without any conflicts. Go check it out!</p>
 <h2 id="Ok-I-can-use-TypeScript…-so-now-what’s-next"><a href="#Ok-I-can-use-TypeScript…-so-now-what’s-next" class="headerlink" title="Ok, I can use TypeScript… so now what’s next?"></a>Ok, I can use TypeScript… so now what’s next?</h2><p>At this point, TypeScript could already point you out to some errors you haven’t noticed before by using built-in and third-party types and gives you a better dev experience by using type inference, as explained in <a href="https://slack.engineering/typescript-at-slack-a81307fa288d" target="_blank" rel="external">TypeScript at Slack</a>, an article telling how Slack moved their codebase to TypeScript.</p>
 <p>Still, you must add your own types by using interfaces, types, enums, classes and whatever you need. That way you’ll add more type coverage that TypeScript will use to apply static typing, assuring type safety.</p>
-<p>Ideally, you’d use the TypeScript 2.3 <code>strict</code> compiler option in your <code>tsconfig.json</code> because it’ll bring you the most type safety. <a href="https://twitter.com/mariusschulz" target="_blank" rel="external">Marius Schulz</a> has a [well explained article] (<a href="https://blog.mariusschulz.com/2017/06/09/typescript-2-3-the-strict-compiler-option" target="_blank" rel="external">https://blog.mariusschulz.com/2017/06/09/typescript-2-3-the-strict-compiler-option</a>) about this. By TypeScript 2.3, the strict option is a group of 4 options, but in future releases it could add more:</p>
+<p>Ideally, you’d use the TypeScript 2.3 <code>strict</code> compiler option in your <code>tsconfig.json</code> because it’ll bring you the most type safety. <a href="https://twitter.com/mariusschulz" target="_blank" rel="external">Marius Schulz</a> has a <a href="https://blog.mariusschulz.com/2017/06/09/typescript-2-3-the-strict-compiler-option" target="_blank" rel="external">well explained article</a> about this. By TypeScript 2.3, the strict option is a group of 4 options, but in future releases it could add more:</p>
 <ul>
 <li><code>strictNullChecks</code></li>
 <li><code>noImplicitAny</code></li>
