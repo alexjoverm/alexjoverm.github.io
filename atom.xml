@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-06-30T20:40:10.000Z</updated>
+  <updated>2017-07-04T07:57:03.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/"/>
     <id>http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/</id>
     <published>2017-06-28T09:17:45.000Z</published>
-    <updated>2017-06-30T20:40:10.000Z</updated>
+    <updated>2017-07-04T07:57:03.000Z</updated>
     
     <content type="html"><![CDATA[<p>You have a <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> project and you heard about all things <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> can help you with. You decide to start using TypeScript. Here you’ll see how to do that in an approachable and pragmatic way.</p>
 <a id="more"></a>
@@ -45,7 +45,7 @@
 </code></pre>
 <p>The most important part is the <code>allowSyntheticDefaultImports</code> setting. Since Vue types doesn’t use ES2015 default exports, this setting must be set to by-pass that. You can see more info in <a href="https://code.visualstudio.com/docs/languages/javascript#_common-questions" target="_blank" rel="external">this VSCode docs page</a>.</p>
 <p>Setting <code>&quot;module&quot;: &quot;es2015&quot;</code> would make the code <a href="https://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/">tree-shakeable</a> by producing ESM (EcmaScript Modules).</p>
-<h3 id="2-Add-ts-loader-webpack-plugin"><a href="#2-Add-ts-loader-webpack-plugin" class="headerlink" title="2. Add ts-loader webpack plugin"></a>2. Add <code>ts-loader</code> webpack plugin</h3><p>Install <code>typescript</code> an <code>ts-loader</code> with npm:</p>
+<h3 id="2-Add-ts-loader-and-webpack-tweaks"><a href="#2-Add-ts-loader-and-webpack-tweaks" class="headerlink" title="2. Add ts-loader and webpack tweaks"></a>2. Add <code>ts-loader</code> and webpack tweaks</h3><p>Install <code>typescript</code> an <code>ts-loader</code> with npm:</p>
 <pre class=" language-bash"><code class="language-bash"><span class="token function">npm</span> i -D typescript ts-loader
 </code></pre>
 <p>Then open <code>build/webpack.base.conf.js</code>, and place the following code at <strong>the beginning</strong> of <code>module.rules</code>, right before than <code>vue-loader</code>:</p>
@@ -60,6 +60,16 @@
         <span class="token punctuation">}</span>
       <span class="token punctuation">}</span><span class="token punctuation">,</span>
     <span class="token operator">...</span>
+</code></pre>
+<p>In there, rename the entry to <code>.ts</code> and add it to the extensions:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token operator">...</span>
+entry<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+  app<span class="token punctuation">:</span> <span class="token string">'./src/main.ts'</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token operator">...</span>
+resolve<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    extensions<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'.ts'</span><span class="token punctuation">,</span> <span class="token string">'.js'</span><span class="token punctuation">,</span> <span class="token string">'.vue'</span><span class="token punctuation">,</span> <span class="token string">'.json'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+<span class="token operator">...</span>
 </code></pre>
 <h3 id="3-Add-es-module-true-to-build-vue-loader-conf-js"><a href="#3-Add-es-module-true-to-build-vue-loader-conf-js" class="headerlink" title="3. Add es-module: true to build/vue-loader.conf.js"></a>3. Add <code>es-module: true</code> to <code>build/vue-loader.conf.js</code></h3><p>That will tell vue-loader to use ES instead of CJS (CommonJS) modules, as describe in <a href="https://github.com/vuejs/vue-loader/blob/master/docs/en/options.md#esmodule" target="_blank" rel="external">vue-loader docs</a>:</p>
 <pre class=" language-javascript"><code class="language-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
