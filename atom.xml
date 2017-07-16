@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-07-08T10:29:47.000Z</updated>
+  <updated>2017-07-16T00:21:13.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -14,6 +14,74 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Lazy loading in Vue using Webpack&#39;s code splitting</title>
+    <link href="http://alexjoverm.github.io/2017/07/16/Lazy-load-a-Vuex-module-in-Vue-using-Webpack-s-code-splitting/"/>
+    <id>http://alexjoverm.github.io/2017/07/16/Lazy-load-a-Vuex-module-in-Vue-using-Webpack-s-code-splitting/</id>
+    <published>2017-07-15T23:05:47.000Z</published>
+    <updated>2017-07-16T00:21:13.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>When a <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> app gets large, lazy loading components, routes or <a href="https://vuex.vuejs.org/en" target="_blank" rel="external">Vuex</a> modules using <a href="https://webpack.js.org/guides/lazy-loading/" target="_blank" rel="external">Webpack’s code splitting</a> will boost it by loading pieces of code only when needed.</p>
+<a id="more"></a>
+<img src="/2017/07/16/Lazy-load-a-Vuex-module-in-Vue-using-Webpack-s-code-splitting/axe.jpg" alt="Axe" title="Axe">
+<p>We could apply lazy loading and code splitting in 3 different levels in a Vue app:</p>
+<ul>
+<li>Components, also known as <a href="https://vuejs.org/v2/guide/components.html#Async-Components" target="_blank" rel="external">async components</a></li>
+<li>Router</li>
+<li>Vuex modules</li>
+</ul>
+<p>But there is something they all have in common: they use <a href="https://github.com/tc39/proposal-dynamic-import" target="_blank" rel="external">dynamic import</a>, which is understood by Webpack since version 2.</p>
+<h2 id="Lazy-load-in-Vue-components"><a href="#Lazy-load-in-Vue-components" class="headerlink" title="Lazy load in Vue components"></a>Lazy load in Vue components</h2><p>This is well explained in the [“Load components when needed with Vue async]components”(<a href="https://egghead.io/lessons/load-components-when-needed-with-vue-async-components" target="_blank" rel="external">https://egghead.io/lessons/load-components-when-needed-with-vue-async-components</a>) on Egghead.</p>
+<p>It’s as simple as using the <code>import</code> function when registering a component:</p>
+<pre class=" language-javascript"><code class="language-javascript">Vue<span class="token punctuation">.</span><span class="token function">component</span><span class="token punctuation">(</span><span class="token string">'AsyncCmp'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'./AsyncCmp'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>And using local registration:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">new</span> <span class="token class-name">Vue</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// ...</span>
+  components<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+    <span class="token string">'AsyncCmp'</span><span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'./AsyncCmp'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="Lazy-load-in-Vue-router"><a href="#Lazy-load-in-Vue-router" class="headerlink" title="Lazy load in Vue router"></a>Lazy load in Vue router</h2><p>Vue router has built in support for <a href="https://router.vuejs.org/en/advanced/lazy-loading.html" target="_blank" rel="external">lazy loading</a>. It’s as simple as importing your components with the <code>import</code> function. Say we wanna lazy load a Login component in the <em>/login</em> route:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Instead of: import Login from './login'</span>
+<span class="token keyword">const</span> Login <span class="token operator">=</span> <span class="token keyword">import</span> <span class="token punctuation">(</span><span class="token string">'./login'</span><span class="token punctuation">)</span>
+
+<span class="token keyword">new</span> <span class="token class-name">VueRouter</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+  routes<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span> path<span class="token punctuation">:</span> <span class="token string">'/login'</span><span class="token punctuation">,</span> component<span class="token punctuation">:</span> Login <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="Lazy-load-a-Vuex-module"><a href="#Lazy-load-a-Vuex-module" class="headerlink" title="Lazy load a Vuex module"></a>Lazy load a Vuex module</h2><p>Vuex has a <code>registerModule</code> method that allow us to dynamically create Vuex modules. If we take into account that <code>import</code> function returns a promise with the ES Module as the payload, we could use it to lazy load a module:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> store <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Vuex<span class="token punctuation">.</span>Store</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token operator">...</span>
+
+<span class="token comment" spellcheck="true">// Assume there is a "login" module we wanna load</span>
+<span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'./store/login'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>loginModule <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  store<span class="token punctuation">.</span><span class="token function">registerModule</span><span class="token punctuation">(</span><span class="token string">'login'</span><span class="token punctuation">,</span> loginModule<span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Lazy loading is made extremely simple with Vue and Webpack. Using what you’ve just read you can start splitting up your app in chunks from different sides and load them when needed, lightening the initial load of the app.</p>
+<p>If you like it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
+]]></content>
+    
+    <summary type="html">
+    
+      When a Vue app gets large, lazy loading components, routes or Vuex modules using Webpack&#39;s code splitting will boost it by loading pieces of code only when needed.
+    
+    </summary>
+    
+    
+      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+    
+      <category term="Vuex" scheme="http://alexjoverm.github.io/tags/Vuex/"/>
+    
+      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
+    
+  </entry>
   
   <entry>
     <title>Integrate TypeScript in your Vue project</title>
@@ -123,9 +191,9 @@ export default {
     </summary>
     
     
-      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
-    
       <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
+    
+      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
     
   </entry>
   
@@ -316,11 +384,11 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
+      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+    
       <category term="GraphQL" scheme="http://alexjoverm.github.io/tags/GraphQL/"/>
     
       <category term="Apollo" scheme="http://alexjoverm.github.io/tags/Apollo/"/>
-    
-      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
     
       <category term="Personal" scheme="http://alexjoverm.github.io/tags/Personal/"/>
     

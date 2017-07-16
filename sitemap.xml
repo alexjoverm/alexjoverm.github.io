@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/07/16/Lazy-load-a-Vuex-module-in-Vue-using-Webpack-s-code-splitting/</loc>
+    
+    <lastmod>2017-07-16T00:21:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/</loc>
     
     <lastmod>2017-07-08T10:29:47.000Z</lastmod>
