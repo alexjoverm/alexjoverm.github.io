@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-07-16T00:21:13.000Z</updated>
+  <updated>2017-07-16T00:42:12.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -17,14 +17,14 @@
   
   <entry>
     <title>Lazy loading in Vue using Webpack&#39;s code splitting</title>
-    <link href="http://alexjoverm.github.io/2017/07/16/Lazy-load-a-Vuex-module-in-Vue-using-Webpack-s-code-splitting/"/>
-    <id>http://alexjoverm.github.io/2017/07/16/Lazy-load-a-Vuex-module-in-Vue-using-Webpack-s-code-splitting/</id>
+    <link href="http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/"/>
+    <id>http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/</id>
     <published>2017-07-15T23:05:47.000Z</published>
-    <updated>2017-07-16T00:21:13.000Z</updated>
+    <updated>2017-07-16T00:42:12.000Z</updated>
     
     <content type="html"><![CDATA[<p>When a <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> app gets large, lazy loading components, routes or <a href="https://vuex.vuejs.org/en" target="_blank" rel="external">Vuex</a> modules using <a href="https://webpack.js.org/guides/lazy-loading/" target="_blank" rel="external">Webpack’s code splitting</a> will boost it by loading pieces of code only when needed.</p>
 <a id="more"></a>
-<img src="/2017/07/16/Lazy-load-a-Vuex-module-in-Vue-using-Webpack-s-code-splitting/axe.jpg" alt="Axe" title="Axe">
+<img src="/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/axe.jpg" alt="Axe" title="Axe">
 <p>We could apply lazy loading and code splitting in 3 different levels in a Vue app:</p>
 <ul>
 <li>Components, also known as <a href="https://vuejs.org/v2/guide/components.html#Async-Components" target="_blank" rel="external">async components</a></li>
