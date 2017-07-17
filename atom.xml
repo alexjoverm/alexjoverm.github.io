@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-07-16T09:49:37.000Z</updated>
+  <updated>2017-07-17T08:19:31.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/"/>
     <id>http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/</id>
     <published>2017-07-15T23:05:47.000Z</published>
-    <updated>2017-07-16T09:49:37.000Z</updated>
+    <updated>2017-07-17T08:19:31.000Z</updated>
     
     <content type="html"><![CDATA[<p>When a <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> app gets large, lazy loading components, routes or <a href="https://vuex.vuejs.org/en" target="_blank" rel="external">Vuex</a> modules using <a href="https://webpack.js.org/guides/lazy-loading/" target="_blank" rel="external">Webpack’s code splitting</a> will boost it by loading pieces of code only when needed.</p>
 <a id="more"></a>
@@ -45,6 +45,13 @@
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
 </code></pre>
 <p>By wrapping the <code>import</code> function into an arrow function, Vue will execute it only when it gets requested, loading the module in that moment.</p>
+<p>If the component importing is using a <a href="http://2ality.com/2014/09/es6-modules-final.html#named-exports-several-per-module" target="_blank" rel="external">named export</a>, you can use object destructuring on the returned Promise. For example, for the UiAlert component from <a href="https://github.com/JosephusPaye/Keen-UI" target="_blank" rel="external">KeenUI</a>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token operator">...</span>
+components<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+  UiAlert<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'keen-ui'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">{</span> UiAlert <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> UiAlert<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token operator">...</span>
+</code></pre>
 <h2 id="Lazy-load-in-Vue-router"><a href="#Lazy-load-in-Vue-router" class="headerlink" title="Lazy load in Vue router"></a>Lazy load in Vue router</h2><p>Vue router has built in support for <a href="https://router.vuejs.org/en/advanced/lazy-loading.html" target="_blank" rel="external">lazy loading</a>. It’s as simple as importing your components with the <code>import</code> function. Say we wanna lazy load a Login component in the <em>/login</em> route:</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Instead of: import Login from './login'</span>
 <span class="token keyword">const</span> Login <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token keyword">import</span><span class="token punctuation">(</span><span class="token string">'./login'</span><span class="token punctuation">)</span>
