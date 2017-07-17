@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/about/index.html</loc>
+    
+    <lastmod>2017-07-17T09:05:55.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/</loc>
     
     <lastmod>2017-07-17T08:19:31.000Z</lastmod>
@@ -40,13 +47,6 @@
     <loc>http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/</loc>
     
     <lastmod>2017-06-13T09:36:24.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/about/index.html</loc>
-    
-    <lastmod>2017-06-05T12:28:01.000Z</lastmod>
     
   </url>
   
