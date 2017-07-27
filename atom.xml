@@ -199,9 +199,9 @@ export default {
     </summary>
     
     
-      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
-    
       <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+    
+      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
     
   </entry>
   
@@ -392,11 +392,11 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
-      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
-    
       <category term="GraphQL" scheme="http://alexjoverm.github.io/tags/GraphQL/"/>
     
       <category term="Apollo" scheme="http://alexjoverm.github.io/tags/Apollo/"/>
+    
+      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
     
       <category term="Personal" scheme="http://alexjoverm.github.io/tags/Personal/"/>
     
