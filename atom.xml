@@ -199,9 +199,9 @@ export default {
     </summary>
     
     
-      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
-    
       <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+    
+      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
     
   </entry>
   
@@ -267,7 +267,7 @@ export default {
     <link href="http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/"/>
     <id>http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/</id>
     <published>2017-04-11T10:55:23.000Z</published>
-    <updated>2017-06-13T10:16:48.000Z</updated>
+    <updated>2017-07-31T14:04:40.000Z</updated>
     
     <content type="html"><![CDATA[<p>Typescript 2.1 introduced lookup types. What are they for? In which cases are they useful?</p>
 <a id="more"></a>
@@ -328,8 +328,6 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     
       <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
     
-      <category term="Jest" scheme="http://alexjoverm.github.io/tags/Jest/"/>
-    
   </entry>
   
   <entry>
@@ -337,7 +335,7 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     <link href="http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/"/>
     <id>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</id>
     <published>2017-03-23T09:46:07.000Z</published>
-    <updated>2017-06-13T10:15:37.000Z</updated>
+    <updated>2017-07-31T14:04:08.000Z</updated>
     
     <content type="html"><![CDATA[<p>What could go wrong by building a hackaton project with <a href="http://dev.apollodata.com/" target="_blank" rel="external">Apollo</a>, <a href="http://graphql.org" target="_blank" rel="external">GraphQL</a>, <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> and <a href="https://nuxtjs.org/" target="_blank" rel="external">Nuxt</a>?</p>
 <a id="more"></a>
@@ -392,13 +390,11 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
-      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
-    
       <category term="GraphQL" scheme="http://alexjoverm.github.io/tags/GraphQL/"/>
     
       <category term="Apollo" scheme="http://alexjoverm.github.io/tags/Apollo/"/>
     
-      <category term="Personal" scheme="http://alexjoverm.github.io/tags/Personal/"/>
+      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
     
   </entry>
   
