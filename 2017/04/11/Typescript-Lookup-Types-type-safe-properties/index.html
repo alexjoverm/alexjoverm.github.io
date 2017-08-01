@@ -68,8 +68,11 @@ autocomplete('#search-box', { hint: false, appendTo: 'body', debug: true }, {
   templates: {
   //'suggestion' templating function used to render a single suggestion
   suggestion: function(suggestion) {
-    return '<a href="'+ suggestion.permalink +'">' +
+    let link = '<a href="'+ suggestion.permalink +'">' +
       suggestion._highlightResult.title.value + '</a>'
+
+    // @Todo: add <span> with type before the link
+    return link
     }
   }
 })

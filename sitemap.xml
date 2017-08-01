@@ -2,6 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/</loc>
+    
+    <lastmod>2017-08-01T15:24:11.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/</loc>
+    
+    <lastmod>2017-08-01T15:24:08.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</loc>
+    
+    <lastmod>2017-08-01T15:24:04.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/</loc>
+    
+    <lastmod>2017-08-01T13:16:56.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/about/index.html</loc>
     
     <lastmod>2017-07-31T16:16:49.000Z</lastmod>
@@ -12,34 +40,6 @@
     <loc>http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/</loc>
     
     <lastmod>2017-07-31T14:04:40.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</loc>
-    
-    <lastmod>2017-07-31T14:04:08.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/</loc>
-    
-    <lastmod>2017-07-17T08:19:31.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/</loc>
-    
-    <lastmod>2017-07-08T10:29:47.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/</loc>
-    
-    <lastmod>2017-06-16T15:42:53.000Z</lastmod>
     
   </url>
   
