@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-08-01T15:24:11.000Z</updated>
+  <updated>2017-08-06T13:21:13.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -16,11 +16,11 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Lazy loading in Vue using Webpack&#39;s code splitting</title>
+    <title>Lazy Loading in Vue using Webpack&#39;s Code Splitting</title>
     <link href="http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/"/>
     <id>http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/</id>
     <published>2017-07-15T23:05:47.000Z</published>
-    <updated>2017-08-01T15:24:11.000Z</updated>
+    <updated>2017-08-06T13:21:13.000Z</updated>
     
     <content type="html"><![CDATA[<p>When a <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> app gets large, lazy loading components, routes or <a href="https://vuex.vuejs.org/en" target="_blank" rel="external">Vuex</a> modules using <a href="https://webpack.js.org/guides/lazy-loading/" target="_blank" rel="external">Webpack’s code splitting</a> will boost it by loading pieces of code only when needed.</p>
 <a id="more"></a>
@@ -73,7 +73,6 @@ components<span class="token punctuation">:</span> <span class="token punctuatio
 <span class="token punctuation">}</span><span class="token punctuation">)</span>
 </code></pre>
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Lazy loading is made extremely simple with Vue and Webpack. Using what you’ve just read you can start splitting up your app in chunks from different sides and load them when needed, lightening the initial load of the app.</p>
-<p>If you like it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
 ]]></content>
     
     <summary type="html">
@@ -83,7 +82,9 @@ components<span class="token punctuation">:</span> <span class="token punctuatio
     </summary>
     
     
-      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
+    
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
       <category term="Vuex" scheme="http://alexjoverm.github.io/tags/Vuex/"/>
     
@@ -96,7 +97,7 @@ components<span class="token punctuation">:</span> <span class="token punctuatio
     <link href="http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/"/>
     <id>http://alexjoverm.github.io/2017/06/28/Integrate-TypeScript-in-your-Vue-project/</id>
     <published>2017-06-28T09:17:45.000Z</published>
-    <updated>2017-08-01T15:24:08.000Z</updated>
+    <updated>2017-08-06T13:21:07.000Z</updated>
     
     <content type="html"><![CDATA[<p>You have a <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> project and you heard about all things <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> can help you with. You decide to start using TypeScript. Here you’ll see how to do that in an approachable and pragmatic way.</p>
 <a id="more"></a>
@@ -189,7 +190,6 @@ export default {
 <p>However, if you have a medium/large codebase, using strict option will make you spend really a huge effort and time solving all the type shortage.</p>
 <p>For that case, a good way to integrate TypeScript is to start with the most flexible configuration, and as you add more type coverage to your codebase, start to enable individually the flags mentioned above, till you get to the point that you can apply the <code>strict</code> option, so you can approach it in a pragmatic way.</p>
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>TypeScript brings you type safety to your codebase from the very start, but the more types you define, the more easy to detect bugs and errors and to make the code maintainable. Vue from version 2 is shipped with typings, so we can make use of them. They become more powerful when you use OOP (Object Oriented Programming) in Vue, but will see that in another post.</p>
-<p>If you like it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
 ]]></content>
     
     <summary type="html">
@@ -199,7 +199,7 @@ export default {
     </summary>
     
     
-      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
       <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
     
@@ -210,7 +210,7 @@ export default {
     <link href="http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/"/>
     <id>http://alexjoverm.github.io/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/</id>
     <published>2017-06-12T14:36:23.000Z</published>
-    <updated>2017-08-01T13:16:56.000Z</updated>
+    <updated>2017-08-06T12:55:24.000Z</updated>
     
     <content type="html"><![CDATA[<p><a href="https://github.com/prettier/prettier" target="_blank" rel="external">Prettier</a> support for <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> just landed. Let’s see how <a href="https://github.com/alexjoverm/tslint-config-prettier" target="_blank" rel="external">tslint-config-prettier</a> helps to seamlessly combine it with <a href="https://palantir.github.io/tslint/" target="_blank" rel="external">TSLint</a>.</p>
 <a id="more"></a>
@@ -248,7 +248,6 @@ export default {
 <p>Now we can use Prettier and TSLint without any problem!</p>
 <img src="/2017/06/12/Use-Prettier-with-TSLint-and-be-happy/prettier.gif" alt="Using Prettier" title="Using Prettier">
 <p>I must thank <a href="https://twitter.com/Vjeux/status/871796320792608768" target="_blank" rel="external">@vjeux for pointing me out</a> to this solution and <a href="https://twitter.com/JBlaak" target="_blank" rel="external">@JBlack</a> for the time to <a href="https://github.com/alexjoverm/tslint-config-prettier/pull/1" target="_blank" rel="external">review tslint-config-prettier</a>.</p>
-<p>If you liked it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
 ]]></content>
     
     <summary type="html">
@@ -267,7 +266,7 @@ export default {
     <link href="http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/"/>
     <id>http://alexjoverm.github.io/2017/04/11/Typescript-Lookup-Types-type-safe-properties/</id>
     <published>2017-04-11T10:55:23.000Z</published>
-    <updated>2017-07-31T14:04:40.000Z</updated>
+    <updated>2017-08-06T12:55:18.000Z</updated>
     
     <content type="html"><![CDATA[<p>Typescript 2.1 introduced lookup types. What are they for? In which cases are they useful?</p>
 <a id="more"></a>
@@ -316,7 +315,6 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
 <li><code>object: O, method: M</code>: we expect <code>O</code> (any object) as a first parameter, and <code>M</code> (a property of <code>O</code> as a second)</li>
 </ul>
 <p>Do you see now the power of lookup types? You can dynamically generate string literal union types! That’ll make your type definitions much more accurate ;)</p>
-<p>If you like it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
 ]]></content>
     
     <summary type="html">
@@ -335,7 +333,7 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     <link href="http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/"/>
     <id>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</id>
     <published>2017-03-23T09:46:07.000Z</published>
-    <updated>2017-08-01T15:24:04.000Z</updated>
+    <updated>2017-08-06T12:54:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>What could go wrong by building a hackaton project with <a href="http://dev.apollodata.com/" target="_blank" rel="external">Apollo</a>, <a href="http://graphql.org" target="_blank" rel="external">GraphQL</a>, <a href="https://vuejs.org/" target="_blank" rel="external">Vue</a> and <a href="https://nuxtjs.org/" target="_blank" rel="external">Nuxt</a>?</p>
 <a id="more"></a>
@@ -380,7 +378,6 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
 <p>The bottom line is if you can stick to the conventions, is perfect for you. Otherwise you must manage the server side rendering yourself. In the <a href="https://vuejs.org/v2/guide/ssr.html#Build-Process-Routing-and-Vuex-State-Hydration" target="_blank" rel="external">Vue docs</a> you can find some resources to master this for complex applications.</p>
 <h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>There are some areas that we didn’t have time for it, such as integrating a state management tool (Redux or Vuex), so we covered the basics in this experiment.</p>
 <p>We found Apollo/GraphQL as a very powerful tool for medium and large apps, it does really well what is made for. Nuxt makes building universal Vue apps be a kid game, but first check if it fits properly with your project. Tools that strongly integrate technologies, such as vue-apollo or Nuxt itself, have their advantages, but first check if they are the best solution for your case. If not, you can always use the “raw” tools.</p>
-<p>Any questions? Post them below or reach me in Twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Don’t hesitate to sharing it!</p>
 ]]></content>
     
     <summary type="html">
@@ -394,7 +391,7 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     
       <category term="Apollo" scheme="http://alexjoverm.github.io/tags/Apollo/"/>
     
-      <category term="Vue" scheme="http://alexjoverm.github.io/tags/Vue/"/>
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
   </entry>
   
@@ -403,7 +400,7 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     <link href="http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/"/>
     <id>http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/</id>
     <published>2017-03-06T09:37:33.000Z</published>
-    <updated>2017-06-13T09:36:24.000Z</updated>
+    <updated>2017-08-06T12:55:06.000Z</updated>
     
     <content type="html"><![CDATA[<p>We’ll see here how to setup <a href="https://webpack.js.org" target="_blank" rel="external">Webpack 2</a>, along with <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> and <a href="https://babeljs.io/" target="_blank" rel="external">Babel</a> to achieve dead code elimination with tree-shaking.</p>
 <a id="more"></a>
@@ -474,7 +471,6 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
 </code></pre>
 <p>And if we run <code>webpack -p</code> for production build, that code will be stripped out. To check that you can search for the string <code>&#39;Bye&#39;</code> on the generated output. It shouldn’t be there.</p>
 <h2 id="Try-it-yourself"><a href="#Try-it-yourself" class="headerlink" title="Try it yourself!"></a>Try it yourself!</h2><p><a href="https://github.com/alexjoverm/typescript-library-starter" target="_blank" rel="external">typescript-library-starter</a> uses tree-shaking! Download the repo, follow the instructions and, be curious and try the code we used at the beginning of this article! Right now it uses RollupJS, but same tree-shaking happens when you run <code>npm run build</code>. If you wanna check the Webpack version, check out <a href="https://github.com/alexjoverm/typescript-library-starter/tree/edd71c19b8d1dcd0b42dc19e0e4ee4b8a7216250" target="_blank" rel="external">this commit</a> in particular to see how it was.</p>
-<p>If you like it, please go and share it! You can follow me on this blog or on twitter as <a href="https://twitter.com/alexjoverm" target="_blank" rel="external">@alexjoverm</a>. Any questions? Shoot!</p>
 ]]></content>
     
     <summary type="html">
