@@ -1,0 +1,134 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Alex Jover Morales"><meta name="copyright" content="Alex Jover Morales"><link rel="author" type="text/html" href="https://twitter.com/alexjoverm"><link rel="icon" href="/alex.jpg"><link rel="canonical" content="http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/"><!-- Add to home screen for Android and modern mobile browsers--><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#008aff"><!-- Add to home screen for Safari on iOS--><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Alex Jover Blog"><link rel="apple-touch-icon" href="/images/icons/icon-152x152.png"><!-- Add to home screen for Windows--><meta name="msapplication-TileImage" content="/images/icons/icon-152x152.png"><meta name="msapplication-TileColor" content="#000000"><title>Tree shaking with Webpack 2, TypeScript and Babel | Alex Jover Morales</title><meta name="description" content="We'll see here how to setup Webpack 2, along with TypeScript and Babel to achieve dead code elimination with tree-shaking"><meta name="twitter:title" content="Tree shaking with Webpack 2, TypeScript and Babel"><meta name="twitter:description" content="We'll see here how to setup Webpack 2, along with TypeScript and Babel to achieve dead code elimination with tree-shaking"><meta name="og:title" content="Tree shaking with Webpack 2, TypeScript and Babel"><meta name="og:description" content="We'll see here how to setup Webpack 2, along with TypeScript and Babel to achieve dead code elimination with tree-shaking"><meta name="article:author" content="https://www.facebook.com/alex.jovermorales"><meta name="article:published_time" content="2017-03-06T09:37:33.000Z"><meta name="article:modified_time" content="2017-08-06T12:55:06.000Z"><meta name="article:tag" content="TypeScript"><meta name="article:tag" content="Webpack"><meta name="twitter:card" content="summary"><meta name="og:image" content="http://alexjoverm.github.io/alex.jpg"><meta name="twitter:image" content="http://alexjoverm.github.io/alex.jpg"><meta name="twitter:site" content="@alexjoverm"><meta name="twitter:creator" content="@alexjoverm"><meta name="og:site_name" content="Alex Jover"><meta name="og:locale" content="en_EN"><meta name="og:type" content="article"><meta name="og:url" content="http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/"><meta name="article:author" content="https://www.facebook.com/alex.jovermorales"><link rel="me" type="text/html" href="https://twitter.com/alexjoverm"><link rel="me" type="text/html" href="https://github.com/alexjoverm"><link rel="me" type="text/html" href="https://www.linkedin.com/in/alex-jover-morales-994752102/"><link rel="me" type="text/html" href="http://stackoverflow.com/users/4191146/alex-jm"><link rel="alternate" type="application/rss+xml" title="Alex Jover" href="/atom.xml"><link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"><link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="/css/main.css"><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700"><meta property="algolia:search" data-application-id="6252178E0A" data-api-key="ead5c5a5a82108a54f04c9f610a54ee2" data-index-name="blog"><link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css"></head><body><nav class="navbar navbar-default navbar-fixed-top navbar-custom"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#main-navbar" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Blog</a></div><div id="main-navbar" class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right"><li class="search"><div id="search-box-container" class="search-box-container"><input id="search-box" type="search" placeholder="Search..." name="search" autocomplete="off" class="search-box"><svg viewbox="654 -372 1664 1664" class="search-box-icon"><path d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z"></path></svg></div></li><li><a href="https://egghead.io/instructors/alex-jover-morales" target="_blank">Videos</a></li><li><a href="function link() { [native code] }" target="_blank">Tags</a></li><li><a href="function link() { [native code] }" target="_blank">Archive</a></li><li><a href="function link() { [native code] }" target="_blank">About</a></li></ul></div></div></div></div></nav><header class="header-section"><div class="intro-header no-img"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="post-heading"><h1>Tree shaking with Webpack 2, TypeScript and Babel</h1><p class="post-meta">Posted on Mar 6 2017 · <a href="/tags/TypeScript/" class="tag post-meta">TypeScript</a> · <a href="/tags/Webpack/" class="tag post-meta">Webpack</a></p></div></div></div></div></div></header><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><article role="main" class="blog-post"><p>We’ll see here how to setup <a href="https://webpack.js.org" target="_blank" rel="external">Webpack 2</a>, along with <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a> and <a href="https://babeljs.io/" target="_blank" rel="external">Babel</a> to achieve dead code elimination with tree-shaking.</p>
+<a id="more"></a>
+<p>Some time ago I updated <a href="https://github.com/alexjoverm/typescript-library-starter" target="_blank" rel="external">typescript-library-starter</a>, a zero-config starter repo for writting a <a href="https://www.typescriptlang.org/" target="_blank" rel="external">TypeScript</a>  library, with <a href="https://webpack.js.org/guides/tree-shaking" target="_blank" rel="external">tree-shaking</a>, <a href="https://github.com/babel/babel-preset-env" target="_blank" rel="external">babel-preset-env</a>, and more:</p>
+<div class="twitter-wrapper"><blockquote class="twitter-tweet"><a href="https://twitter.com/alexjoverm/status/838681719993663488" target="_blank" rel="external"></a></blockquote></div><script async defer src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+<p>Right now it uses RollupJS, but same concepts apply. So I thought, why not sharing that to the people? Hope you find it useful and safes you some time I had to spend :)</p>
+<h2 id="What-is-really-tree-shaking"><a href="#What-is-really-tree-shaking" class="headerlink" title="What is really tree-shaking?"></a>What is really tree-shaking?</h2><img src="/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/tree.jpeg" alt="Tree" title="Tree">
+<p>Tree shaking is an algorithm introduced first by <a href="http://rollupjs.org/" target="_blank" rel="external">RollupJS</a> and also implemented by <a href="https://webpack.js.org/guides/tree-shaking" target="_blank" rel="external">Webpack 2</a> that removes any unused code when bundling your code. It relies on ES2015 modules in order to achieve that.</p>
+<p>Let’s see an example. You have a file <code>greetings.js</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">/* greetings.js */</span>
+
+<span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Hello'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">sayBye</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Bye'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Which you import in your <code>index.js</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">/* index.js */</span>
+
+<span class="token keyword">import</span> <span class="token punctuation">{</span> sayHello <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'./greetings'</span>
+
+<span class="token function">sayHello</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+</code></pre>
+<p>We can see that <code>sayBye</code> is not used. When using tree-shaking, that code will be removed from the final bundle. Otherwise it will be included even if it’s not used.</p>
+<h2 id="Why-Typescript-Babel"><a href="#Why-Typescript-Babel" class="headerlink" title="Why Typescript + Babel?"></a>Why Typescript + Babel?</h2><p>You have a good explanation in the <a href="https://github.com/alexjoverm/typescript-library-starter#why-using-typescript-and-babel" target="_blank" rel="external">typescript-library-starter repo</a>.</p>
+<h2 id="Cool-show-me-how-to-do-it"><a href="#Cool-show-me-how-to-do-it" class="headerlink" title="Cool, show me how to do it!"></a>Cool, show me how to do it!</h2><p>As mentioned, tree-shaking relies on <strong>ES2015 modules</strong>, so we need to make sure we use them. For that:</p>
+<ul>
+<li>Use ES2015 in TypeScript</li>
+<li>Use ES2015 modules in Babel</li>
+<li>Just run <code>webpack -p</code> (production mode) and that should be it</li>
+</ul>
+<h3 id="1-Use-ES2015-in-TypeScript"><a href="#1-Use-ES2015-in-TypeScript" class="headerlink" title="1. Use ES2015 in TypeScript"></a>1. Use ES2015 in TypeScript</h3><p>You need to set <code>&quot;target&quot;: &quot;es2015&quot;</code> in <code>tsconfig.json</code> file. Note that is <strong>not necessary</strong> to set <code>&quot;module&quot;: &quot;es2015&quot;</code>.</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+    <span class="token property">"compilerOptions"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"moduleResolution"</span><span class="token operator">:</span> <span class="token string">"node"</span><span class="token punctuation">,</span>
+        <span class="token property">"target"</span><span class="token operator">:</span> <span class="token string">"es2015"</span><span class="token punctuation">,</span>
+        <span class="token property">"lib"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"es2016"</span><span class="token punctuation">,</span> <span class="token string">"dom"</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+        ...
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>More info in <a href="https://www.typescriptlang.org/docs/handbook/compiler-options.html" target="_blank" rel="external">compiler options TypeScript page</a>.</p>
+<h3 id="2-Use-ES2015-modules-in-Babel"><a href="#2-Use-ES2015-modules-in-Babel" class="headerlink" title="2. Use ES2015 modules in Babel"></a>2. Use ES2015 modules in Babel</h3><p>I’d strongly suggest you using <a href="https://github.com/babel/babel-preset-env" target="_blank" rel="external">babel-preset-env</a>. By far the most flexible and useful <a href="https://babeljs.io/" target="_blank" rel="external">Babel</a> preset :)</p>
+<p>Anyways, whatever preset you use, you must indicate <code>module: false</code> in your <code>.babelrc</code> file:</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"presets"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">[</span><span class="token string">"env"</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token property">"targets"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token property">"browsers"</span><span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"last 2 versions"</span><span class="token punctuation">,</span> <span class="token string">"safari >= 7"</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span><span class="token punctuation">,</span>
+      <span class="token property">"modules"</span><span class="token operator">:</span> <span class="token boolean">false</span>
+    <span class="token punctuation">}</span><span class="token punctuation">]</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<h3 id="3-Let’s-see-the-results"><a href="#3-Let’s-see-the-results" class="headerlink" title="3. Let’s see the results"></a>3. Let’s see the results</h3><p>Now, when you have your <code>webpack.config.js</code> setup, if you run <code>webpack</code>, you’ll see within the generated output an unused harmony comment, like:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token operator">...</span>
+<span class="token comment" spellcheck="true">/* unused harmony export sayBye */</span>
+<span class="token comment" spellcheck="true">/* harmony export (immutable) */</span> __webpack_exports__<span class="token punctuation">[</span><span class="token string">"a"</span><span class="token punctuation">]</span> <span class="token operator">=</span> sayHello<span class="token punctuation">;</span>
+<span class="token comment" spellcheck="true">// This function isn't used anywhere</span>
+<span class="token keyword">function</span> <span class="token function">sayBye</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'Bye'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token operator">...</span>
+</code></pre>
+<p>And if we run <code>webpack -p</code> for production build, that code will be stripped out. To check that you can search for the string <code>&#39;Bye&#39;</code> on the generated output. It shouldn’t be there.</p>
+<h2 id="Try-it-yourself"><a href="#Try-it-yourself" class="headerlink" title="Try it yourself!"></a>Try it yourself!</h2><p><a href="https://github.com/alexjoverm/typescript-library-starter" target="_blank" rel="external">typescript-library-starter</a> uses tree-shaking! Download the repo, follow the instructions and, be curious and try the code we used at the beginning of this article! Right now it uses RollupJS, but same tree-shaking happens when you run <code>npm run build</code>. If you wanna check the Webpack version, check out <a href="https://github.com/alexjoverm/typescript-library-starter/tree/edd71c19b8d1dcd0b42dc19e0e4ee4b8a7216250" target="_blank" rel="external">this commit</a> in particular to see how it was.</p>
+
+    <p><a class="twitter-share-button"
+  href="https://twitter.com/intent/tweet?text=Tree%20shaking%20with%20Webpack%202%2C%20TypeScript%20and%20Babel&url=http://alexjoverm.github.io/2017/03/06/Tree-shaking-with-Webpack-2-TypeScript-and-Babel/&hashtags=TypeScript%2CWebpack&via=alexjoverm">Tweet</a></p>
+
+    <p>If you like it, please go and share it!
+    You can follow me <a href="https://egghead.io/instructors/alex-jover-morales">recording videos on Egghead</a>
+    or on twitter as <a href="https://twitter.com/alexjoverm">@alexjoverm</a>. Any questions? Shoot!</p>
+  </article><ul class="pager blog-pager"><li class="previous"><a href="/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/" data-toggle="tooltip" data-placement="top" title="Apollo, GraphQL, Vue and Nuxt shenanigans!">← Previous Post</a></li></ul><form action="https://github.us16.list-manage.com/subscribe/post" method="POST" class="form signup-form"><input type="hidden" name="u" value="534e314884644825b957a5eee"><input type="hidden" name="id" value="e05e60374d"><h4 class="text-center">Get upcoming Guides, Series, EBooks and Courses!</h4><div class="col-sm-4"><input id="MERGE0" type="email" required placeholder="Your email" autocapitalize="off" autocorrect="off" name="MERGE0" class="form-control"></div><div class="col-sm-4"><input id="MERGE1" type="text" name="MERGE1" placeholder="Your name" class="form-control"></div><div class="col-sm-4"><button type="submit" class="btn btn-block">Subscribe</button></div></form><div class="disqus-comments"><div class="comments"><div id="disqus_thread"></div></div></div><script>var url_parts = window.location.href.split("?");
+var disqus_url = url_parts[0];
+(function () {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = "//alexjm-blog.disqus.com/embed.js";
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script></div></div></div><footer><div class="container beautiful-jekyll-footer"><div class="row"><p class="copyright text-muted">© Alex Jover Morales • 2017</p></div></div></footer><script src="/js/sw-register.js"></script><script src="/js/jquery-1.11.2.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script><script>var algoliaConfig = document.querySelector('meta[property="algolia:search"]').dataset
+
+// Initialize autocomplete menu
+var client = algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey)
+var index = client.initIndex(algoliaConfig.indexName)
+//initialize autocomplete on search input (ID selector must match)
+autocomplete('#search-box', { hint: false, appendTo: 'body', debug: true }, {
+  source: autocomplete.sources.hits(index, {hitsPerPage: 5}),
+  //value to be displayed in input control after user's suggestion selection
+  displayKey: 'name',
+  //hash of templates used when rendering dataset
+  templates: {
+  //'suggestion' templating function used to render a single suggestion
+  suggestion: function(suggestion) {
+    let link = '<a href="'+ suggestion.permalink +'">' +
+      suggestion._highlightResult.title.value + '</a>'
+
+    // @Todo: add <span> with type before the link
+    return link
+    }
+  }
+})
+</script><script>window.twttr = (function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0],
+t = window.twttr || {};
+if (d.getElementById(id)) return t;
+js = d.createElement(s);
+js.id = id;
+js.src = "https://platform.twitter.com/widgets.js";
+fjs.parentNode.insertBefore(js, fjs);
+t._e = [];
+t.ready = function(f) {
+t._e.push(f);
+};
+return t;
+}(document, "script", "twitter-wjs"));
+
+</script><script>(function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+ga('create', 'UA-93226517-1', 'auto');
+ga('send', 'pageview');</script></body></html>
