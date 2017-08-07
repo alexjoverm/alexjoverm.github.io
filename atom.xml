@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-08-07T06:27:38.000Z</updated>
+  <updated>2017-08-07T10:42:29.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -16,74 +16,112 @@
   <generator uri="http://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Apply infinite operations to an RxJS Observable</title>
-    <link href="http://alexjoverm.github.io/2017/08/07/Apply-infinite-operations-to-an-RxJS-Observable/"/>
-    <id>http://alexjoverm.github.io/2017/08/07/Apply-infinite-operations-to-an-RxJS-Observable/</id>
-    <published>2017-08-07T06:27:38.000Z</published>
-    <updated>2017-08-07T06:27:38.000Z</updated>
+    <title>How I made a Progressive Web App out of my Blog</title>
+    <link href="http://alexjoverm.github.io/2017/08/07/How-I-made-a-Progressive-Web-App-out-of-my-Blog/"/>
+    <id>http://alexjoverm.github.io/2017/08/07/How-I-made-a-Progressive-Web-App-out-of-my-Blog/</id>
+    <published>2017-08-07T10:42:29.000Z</published>
+    <updated>2017-08-07T10:42:29.000Z</updated>
     
-    <content type="html"><![CDATA[<p>Learn how easy is to apply a set of operations to a RxJS Observable in JavaScript</p>
+    <content type="html"><![CDATA[<p>One day I wanted to learn about PWA (Progressive Web App), so I though: What’s better than do it with my own blog?</p>
 <a id="more"></a>
-<img src="/2017/08/07/Apply-infinite-operations-to-an-RxJS-Observable/rxjs.png" alt="RxJS" title="RxJS">
-<p>This week, my friend <a href="https://twitter.com/alejandro_such" target="_blank" rel="external">@alejandro_such</a> asked me about how to apply infinite operations to an <a href="http://reactivex.io/rxjs/" target="_blank" rel="external">RxJS</a> observable. Honestly, is not something I stumbled upon before, but every single case you need to solve in RxJS feels like a new challenge. That makes room to write a RxJS cookbook, but that’s not why you’re reading this today 😉.</p>
-<p><em>Note: you need a bit of RxJS knowledge to follow up the article</em></p>
-<h2 id="The-problem"><a href="#The-problem" class="headerlink" title="The problem"></a>The problem</h2><p>We’re used to see and write <a href="http://reactivex.io/rxjs/manual/overview.html#operators" target="_blank" rel="external">Observables operators</a> in a chain:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
-
-stream
-  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Res: 2</span>
+<p>I think that’s something of developers: when we wanna learn something, we go and get our hands dirty, right?</p>
+<p>The first thing I wanted was to get <strong>metrics and insights</strong> on the blog at that point. For that I used <a href="https://github.com/GoogleChrome/lighthouse" target="_blank" rel="external">Lighthouse</a> in its Chrome extension version.</p>
+<img src="/2017/08/07/How-I-made-a-Progressive-Web-App-out-of-my-Blog/pwa_before.png" alt="Lighthouse: metrics before" title="Lighthouse: metrics before">
+<p>By default, the performance stats were quite good. I wasn’t surprised: my blog runs on <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>, a NodeJS static site generator which I’m in love with due to it’s blazing speed, easiness of deployment, and familiarity with NodeJS and ecosystem.</p>
+<p>For the PWA metrics, it was half-way, and I’ve never payed attention to that. Let’s see what steps I did to make it 100% a Progressive Web App.</p>
+<h2 id="1-Create-a-Web-App-Manifest-and-Icons"><a href="#1-Create-a-Web-App-Manifest-and-Icons" class="headerlink" title="1. Create a Web App Manifest and Icons"></a>1. Create a Web App Manifest and Icons</h2><p>The <a href="https://developer.mozilla.org/en-US/docs/Web/Manifest" target="_blank" rel="external">Web App Manifest</a> is a JSON file designed to describe a Web Application. This is a excerpt of my <a href="https://github.com/alexjoverm/blog/blob/master/themes/beautiful-hexo/source/manifest.json" target="_blank" rel="external"><code>manifest.json</code></a>:</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"name"</span><span class="token operator">:</span> <span class="token string">"Alex Jover Blog"</span><span class="token punctuation">,</span>
+  <span class="token property">"short_name"</span><span class="token operator">:</span> <span class="token string">"AlexJ Blog"</span><span class="token punctuation">,</span>
+  <span class="token property">"theme_color"</span><span class="token operator">:</span> <span class="token string">"#008aff"</span><span class="token punctuation">,</span>
+  <span class="token property">"background_color"</span><span class="token operator">:</span> <span class="token string">"#ffffff"</span><span class="token punctuation">,</span>
+  <span class="token property">"display"</span><span class="token operator">:</span> <span class="token string">"standalone"</span><span class="token punctuation">,</span>
+  <span class="token property">"icons"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      <span class="token property">"src"</span><span class="token operator">:</span> <span class="token string">"images/icons/icon-72x72.png"</span><span class="token punctuation">,</span>
+      <span class="token property">"sizes"</span><span class="token operator">:</span> <span class="token string">"72x72"</span><span class="token punctuation">,</span>
+      <span class="token property">"type"</span><span class="token operator">:</span> <span class="token string">"image/png"</span>
+    <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  ...
 </code></pre>
-<p>Now imagine you need to apply an undetermined set of operations. In that case you cannot chain them anymore. One could write the following code:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
-<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
-<span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-
-fns<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>fn <span class="token operator">=</span><span class="token operator">></span> stream<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">)</span>
-
-stream<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token comment" spellcheck="true">// Expected output ==> Res: 3</span>
-<span class="token comment" spellcheck="true">// Actual output ==> Res: 0</span>
+<p>I think the names are pretty descriptive by themselves. Make sure at least you write the <code>name</code>, <code>short_name</code> and <code>icons</code> fields.</p>
+<p>Some other fields you may be interested in, are <a href="https://developer.mozilla.org/es/docs/Web/Manifest#start_urlhttps://developer.mozilla.org/es/docs/Web/Manifest#start_url" target="_blank" rel="external"><code>start_url</code></a> and <a href="https://developer.mozilla.org/es/docs/Web/Manifest#scope" target="_blank" rel="external"><code>scope</code></a>.</p>
+<p>As per the <strong>icons</strong>, you need to create it in several sizes. For that I’ve used <a href="https://app-manifest.firebaseapp.com/" target="_blank" rel="external">this Web App Manifest generator</a>, which also helps you creating the <code>manifest.json</code> file. I’ve downloaded the zip file from that web, unzip it and moved the files to where they belong. Then updated the <code>src</code> property of the <code>icons</code> array as needed.</p>
+<p>Finally, you must include it with a <code>meta</code> tag in the <a href="https://github.com/alexjoverm/blog/blob/master/themes/beautiful-hexo/layout/partial/head.jade" target="_blank" rel="external">head of the HTML</a> (you’ll see my examples are in Jade/Pug, but I’ll write it here in pure HTML):</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>manifest<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/manifest.json<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
 </code></pre>
-<p>How’s it possible that we added 3 map operations, and we get <code>Res: 0</code>? It’s like we didn’t do anything at all.</p>
-<p>Simple, because <strong>observables are immutable</strong>. So, whenever you apply an operator, it’s returning a new observable. Avoid side effects is one point of FP (Functional Programming), and RxJS is a FRP (Functional Reactive Programming) library. It’s a common pitfall to think that the operators return a mutated version of their same instance.</p>
-<h2 id="The-solution"><a href="#The-solution" class="headerlink" title="The solution"></a>The solution</h2><p>We need to store the new observable returned by every operator, and apply the next operator over that one. A simple way, following the previous example:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
-<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
-<span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+<h2 id="2-Add-meta-tags"><a href="#2-Add-meta-tags" class="headerlink" title="2. Add meta tags"></a>2. Add meta tags</h2><p>You need to add <a href="https://developers.google.com/web/fundamentals/design-and-ui/browser-customization/" target="_blank" rel="external">some meta tags</a> so the browsers of native platforms would appropriately understand it as a Progressive Web App. The <a href="https://github.com/alexjoverm/blog/blob/master/themes/beautiful-hexo/layout/partial/head.jade#L13-L23" target="_blank" rel="external">tags I added</a> are:</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>icon<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/images/icons/icon-152x152.png<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+<span class="token comment" spellcheck="true">&lt;!-- theme-color defines the top bar color (blue in my case)--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>theme-color<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>#008aff<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
 
-fns<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>fn <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
-  stream <span class="token operator">=</span> stream<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// update with new observable</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">&lt;!-- Add to home screen for Safari on iOS--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>apple-mobile-web-app-capable<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>yes<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>apple-mobile-web-app-status-bar-style<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>default<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>apple-mobile-web-app-title<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>Alex Jover Blog<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>link</span> <span class="token attr-name">rel</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>apple-touch-icon<span class="token punctuation">"</span></span> <span class="token attr-name">href</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/images/icons/icon-152x152.png<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
 
-stream<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">&lt;!-- Add to home screen for Windows--></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>msapplication-TileImage<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>/images/icons/icon-152x152.png<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>meta</span> <span class="token attr-name">name</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>msapplication-TileColor<span class="token punctuation">"</span></span> <span class="token attr-name">content</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>#000000<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
 </code></pre>
-<p>Or, if we wanna go functional and avoid side effects, <code>reduce</code> plays very well here:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Try yourself at http://jsbin.com/qucihequdu/edit?js,console</span>
-<span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
-<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
-<span class="token keyword">const</span> original <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-
-<span class="token keyword">const</span> mapped <span class="token operator">=</span> fns<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span>acum<span class="token punctuation">,</span> fn<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span>
-    acum<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> <span class="token function">fn</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Apply and return new observable</span>
-<span class="token punctuation">,</span> original<span class="token punctuation">)</span>
-
-mapped<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<p>As you could see, some platforms have their own meta tags.</p>
+<h2 id="3-Create-a-Pre-cache-Service-Worker"><a href="#3-Create-a-Pre-cache-Service-Worker" class="headerlink" title="3. Create a Pre-cache Service Worker"></a>3. Create a Pre-cache Service Worker</h2><p>Creating a <a href="https://developers.google.com/web/fundamentals/getting-started/primers/service-workers" target="_blank" rel="external">Service Worker</a> could be a very tedious job, they’re very versatile and allow to do a lot of things.</p>
+<p>For most cases, we wanna use them to cache all the static files, so our app can work offline. There are different strategies to do this, they all are explained very well in the Offline Cookbook, written by <a href="https://twitter.com/jaffathecake" target="_blank" rel="external">Jake Archibald</a> at Google.</p>
+<p>Still, it’s quite some work to create and maintain a Service Worker for this purpose and every project. That’s where <a href="https://github.com/GoogleChrome/sw-precache" target="_blank" rel="external">sw-precache</a> comes in handy, a tool that automatically creates a pre-cache Service Worker for the static assets given using the <a href="https://developers.google.com/web/fundamentals/instant-and-offline/offline-cookbook/#cache-falling-back-to-network" target="_blank" rel="external">cache-first</a> strategy.</p>
+<p>If you’re using Webpack in your project, you’re lucky to have a <a href="https://github.com/goldhand/sw-precache-webpack-plugin" target="_blank" rel="external">sw-precache plugin</a> that you can plug in your conf to create a Service Worker for your bundled assets automatically.</p>
+<p>In my case, I’m not using webpack, gulp or anything. Just a modified version of <a href="https://github.com/twoyao/beautiful-hexo" target="_blank" rel="external">Beautiful Hexo</a> theme with plain css, js and images.</p>
+<p>But that’s no problem. You can use <strong>sw-precache command line utility</strong>. For that, I created first a <a href="https://github.com/alexjoverm/blog/blob/master/sw-config.js" target="_blank" rel="external">sw-config.js</a> file, indicating the assets to cache and the prefix to strip out, since the service worker will be under the public folder as well:</p>
+<pre class=" language-javascript"><code class="language-javascript">module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
+  staticFileGlobs<span class="token punctuation">:</span> <span class="token punctuation">[</span>
+    <span class="token string">'public/css/**.css'</span><span class="token punctuation">,</span>
+    <span class="token string">'public/**/**.html'</span><span class="token punctuation">,</span>
+    <span class="token string">'public/**/**.jpg'</span><span class="token punctuation">,</span>
+    <span class="token string">'public/**/**.png'</span><span class="token punctuation">,</span>
+    <span class="token string">'public/js/**.js'</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  stripPrefix<span class="token punctuation">:</span> <span class="token string">'public'</span><span class="token punctuation">,</span>
+<span class="token punctuation">}</span>
 </code></pre>
-<p>Go to <a href="http://jsbin.com/qucihequdu/edit?js,console" target="_blank" rel="external">this jsbin</a> and start playing with it!</p>
-]]></content>
+<p>Then simply running <code>sw-precache --config sw-config.js</code>, it creates a <a href="https://github.com/alexjoverm/blog/blob/master/service-worker.js" target="_blank" rel="external">service-worker.js</a> file ready to use.</p>
+<p><em>Note: keep in mind Service Workers run only in localhost or in a HTTPS url</em></p>
+<h2 id="4-Register-the-Service-Worker"><a href="#4-Register-the-Service-Worker" class="headerlink" title="4. Register the Service Worker"></a>4. Register the Service Worker</h2><p>Once created a <code>service-worker.js</code> file, you need to register it in our app. For that, I used a <a href="https://github.com/GoogleChrome/sw-precache/blob/master/demo/app/js/service-worker-registration.js" target="_blank" rel="external">battle tested service-worker-registration.js file</a> located on the sw-precache repo.</p>
+<p>Then I simply copied it <a href="https://github.com/alexjoverm/blog/blob/master/themes/beautiful-hexo/source/js/sw-register.js" target="_blank" rel="external">to my repo</a> where the js files of the theme are.</p>
+<h2 id="5-Glue-all-together"><a href="#5-Glue-all-together" class="headerlink" title="5. Glue all together"></a>5. Glue all together</h2><p>So far I’ve made everything needed for building an offline ready and installable Progressive Web App:</p>
+<ul>
+<li>Having a <code>manifest.json</code> with icons</li>
+<li>Adding <code>meta</code> tags</li>
+<li>Create a Service Worker for pre-caching</li>
+<li>Run in on HTTPS (I’m using Github Pages)</li>
+</ul>
+<p>Then only thing is, every time I post or change anything from the theme, I must re-create the precache service worker file, which is a bit repetitive.</p>
+<p>That’s why I wrote a extremely <a href="https://github.com/alexjoverm/blog/blob/master/deploy.sh" target="_blank" rel="external">simple script</a>:</p>
+<pre class=" language-bash"><code class="language-bash">hexo generate -f <span class="token comment" spellcheck="true"># re-generates the static assets</span>
+sw-precache --config sw-config.js <span class="token comment" spellcheck="true"># creates the service worker</span>
+<span class="token function">cp</span> service-worker.js public <span class="token comment" spellcheck="true"># copies it to the static site folder</span>
+hexo deploy <span class="token comment" spellcheck="true"># deploys it to github pages</span>
+</code></pre>
+<p>So as before I only needed to do <code>hexo deploy -g</code>, which generates the <code>public</code> folder and deploys it, now I had to add 2 steps in between for the service worker creation, and with this script is very comfortable to do.</p>
+<h2 id="Checking-out"><a href="#Checking-out" class="headerlink" title="Checking out"></a>Checking out</h2><p>Running again a Lighthouse audit, I saw that was all to get the 100 PWA metrics, plus some extra performance and accessibility improvements I made:</p>
+<img src="/2017/08/07/How-I-made-a-Progressive-Web-App-out-of-my-Blog/pwa_after.png" alt="Lighthouse: metrics after" title="Lighthouse: metrics after">
+<p>When I opened from my Android phone on Chrome, I saw the <em>“Add to Home”</em> banner, which made me very happy to see my Blog being <strong>installable such a native app</strong>:</p>
+<p><div class="img-vertical"><br><img src="/2017/08/07/How-I-made-a-Progressive-Web-App-out-of-my-Blog/pwa_banner.png" alt="Install banner" title="Install banner"></div></p>
+<div>
+
+<p>And best of all, the blog is <strong>fully working offline</strong>, so go try out turning off your internet connection and see the magic of a working Progressive Web App :)</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>It’s amazing to learn new stuff, specially such early technologies as Progressive Web Apps, but is even better to learn it by applying it to a real project of yourself!</p>
+</div>]]></content>
     
     <summary type="html">
     
-      Learn how easy is to apply a set of operations to a RxJS Observable in JavaScript
+      I wanted to learn about PWA (Progressive Web Apps), so I decided to make this blog a PWA
     
     </summary>
     
     
       <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
     
-      <category term="RxJS" scheme="http://alexjoverm.github.io/tags/RxJS/"/>
+      <category term="PWA" scheme="http://alexjoverm.github.io/tags/PWA/"/>
     
   </entry>
   
@@ -271,9 +309,9 @@ export default {
     </summary>
     
     
-      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
-    
       <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
+    
+      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
     
   </entry>
   
@@ -459,11 +497,11 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
-      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
-    
       <category term="GraphQL" scheme="http://alexjoverm.github.io/tags/GraphQL/"/>
     
       <category term="Apollo" scheme="http://alexjoverm.github.io/tags/Apollo/"/>
+    
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
   </entry>
   
