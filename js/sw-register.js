@@ -30,7 +30,7 @@ if ("serviceWorker" in navigator) {
       .register("service-worker.js")
       .then(function(reg) {
         console.log('sw - registered')
-        reg.update()
+        // reg.update()
 
           // updatefound is fired if service-worker.js changes.
         reg.onupdatefound = function() {
@@ -48,9 +48,7 @@ if ("serviceWorker" in navigator) {
                   // It's the perfect time to display a "New content is available; please refresh."
                   // message in the page's interface.
                   console.log("New or updated content is now available.")
-                  setTimeout(() => {
-                    document.querySelector('#update-message').classList.add('show')
-                  }, 100)
+                  document.querySelector('#update-message').classList.add('show')
                 } else {
                   // At this point, everything has been precached.
                   // It's the perfect time to display a "Content is cached for offline use." message.
