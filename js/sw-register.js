@@ -30,13 +30,14 @@ if ("serviceWorker" in navigator) {
       .register("service-worker.js")
       .then(function(reg) {
         console.log('sw - registered')
-        // updatefound is fired if service-worker.js changes.
+        reg.update()
+
+          // updatefound is fired if service-worker.js changes.
         reg.onupdatefound = function() {
           console.log('sw - update found')
           // The updatefound event implies that reg.installing is set; see
           // https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
           var installingWorker = reg.installing
-          reg.update()
 
           installingWorker.onstatechange = function() {
             switch (installingWorker.state) {
