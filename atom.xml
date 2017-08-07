@@ -119,9 +119,9 @@ hexo deploy <span class="token comment" spellcheck="true"># deploys it to github
     </summary>
     
     
-      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
-    
       <category term="PWA" scheme="http://alexjoverm.github.io/tags/PWA/"/>
+    
+      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
     
   </entry>
   
