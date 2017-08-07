@@ -36,6 +36,7 @@ if ("serviceWorker" in navigator) {
           // The updatefound event implies that reg.installing is set; see
           // https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
           var installingWorker = reg.installing
+          reg.update()
 
           installingWorker.onstatechange = function() {
             switch (installingWorker.state) {
@@ -46,7 +47,9 @@ if ("serviceWorker" in navigator) {
                   // It's the perfect time to display a "New content is available; please refresh."
                   // message in the page's interface.
                   console.log("New or updated content is now available.")
-                  document.querySelector('#update-message').classList.add('show')
+                  setTimeout(() => {
+                    document.querySelector('#update-message').classList.add('show')
+                  }, 100)
                 } else {
                   // At this point, everything has been precached.
                   // It's the perfect time to display a "Content is cached for offline use." message.
