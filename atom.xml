@@ -271,9 +271,9 @@ export default {
     </summary>
     
     
-      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
-    
       <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
+    
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
   </entry>
   
@@ -459,11 +459,11 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
+    
       <category term="GraphQL" scheme="http://alexjoverm.github.io/tags/GraphQL/"/>
     
       <category term="Apollo" scheme="http://alexjoverm.github.io/tags/Apollo/"/>
-    
-      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
   </entry>
   
