@@ -48,11 +48,9 @@ if ("serviceWorker" in navigator) {
                   // It's the perfect time to display a "New content is available; please refresh."
                   // message in the page's interface.
                   console.log("New or updated content is now available sdsdaf.")
-                  setTimeout(() => {
                     console.log('SHOW')
                     console.log(document.querySelector('#update-message'))
                     document.querySelector('#update-message').classList.add('show')
-                  }, 2000)
                 } else {
                   // At this point, everything has been precached.
                   // It's the perfect time to display a "Content is cached for offline use." message.
