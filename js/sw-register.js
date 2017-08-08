@@ -47,7 +47,7 @@ if ("serviceWorker" in navigator) {
                   // have been added to the cache.
                   // It's the perfect time to display a "New content is available; please refresh."
                   // message in the page's interface.
-                  console.log("New or updated content is now available.")
+                  console.log("New or updated content is now available sdsdaf.")
                   setTimeout(() => {
                     console.log('SHOW')
                     console.log(document.querySelector('#update-message'))
