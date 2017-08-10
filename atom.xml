@@ -196,9 +196,9 @@ components<span class="token punctuation">:</span> <span class="token punctuatio
     
       <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
-      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
-    
       <category term="Vuex" scheme="http://alexjoverm.github.io/tags/Vuex/"/>
+    
+      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
     
   </entry>
   
