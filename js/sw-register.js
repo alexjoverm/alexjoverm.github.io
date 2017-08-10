@@ -27,14 +27,10 @@ if ("serviceWorker" in navigator) {
     // *Don't* register service worker file in, e.g., a scripts/ sub-directory!
     // See https://github.com/slightlyoff/ServiceWorker/issues/468
     navigator.serviceWorker
-      .register("service-worker.js")
+      .register("/service-worker.js")
       .then(function(reg) {
-        console.log('sw - registered')
-        // reg.update()
-
-          // updatefound is fired if service-worker.js changes.
+        // updatefound is fired if service-worker.js changes.
         reg.onupdatefound = function() {
-          console.log('sw - update found')
           // The updatefound event implies that reg.installing is set; see
           // https://w3c.github.io/ServiceWorker/#service-worker-registration-updatefound-event
           var installingWorker = reg.installing
@@ -47,10 +43,8 @@ if ("serviceWorker" in navigator) {
                   // have been added to the cache.
                   // It's the perfect time to display a "New content is available; please refresh."
                   // message in the page's interface.
-                  console.log("New or updated content is now available sdsdaf.")
-                    console.log('SHOW')
-                    console.log(document.querySelector('#update-message'))
-                    document.querySelector('#update-message').classList.add('show')
+                  console.log("New or updated content is now available.")
+                  document.querySelector('#update-message').classList.add('show')
                 } else {
                   // At this point, everything has been precached.
                   // It's the perfect time to display a "Content is cached for offline use." message.
