@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-08-09T17:32:35.000Z</updated>
+  <updated>2017-08-14T08:56:41.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -14,6 +14,78 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Apply infinite operations to an RxJS Observable</title>
+    <link href="http://alexjoverm.github.io/2017/08/14/Apply-infinite-operations-to-an-RxJS-Observable/"/>
+    <id>http://alexjoverm.github.io/2017/08/14/Apply-infinite-operations-to-an-RxJS-Observable/</id>
+    <published>2017-08-14T06:27:38.000Z</published>
+    <updated>2017-08-14T08:56:41.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Learn how easy is to apply a set of operations to a RxJS Observable in JavaScript</p>
+<a id="more"></a>
+<img src="/2017/08/14/Apply-infinite-operations-to-an-RxJS-Observable/rxjs.png" alt="RxJS" title="RxJS">
+<p>This week, my friend <a href="https://twitter.com/alejandro_such" target="_blank" rel="external">@alejandro_such</a> asked me about how to apply infinite operations to an <a href="http://reactivex.io/rxjs/" target="_blank" rel="external">RxJS</a> observable. Honestly, is not something I stumbled upon before, but every single case you need to solve in RxJS feels like a new challenge. That makes room to write a RxJS cookbook, but that’s not why you’re reading this today 😉.</p>
+<p><em>Note: you need a bit of RxJS knowledge to follow up the article</em></p>
+<h2 id="The-problem"><a href="#The-problem" class="headerlink" title="The problem"></a>The problem</h2><p>We’re used to see and write <a href="http://reactivex.io/rxjs/manual/overview.html#operators" target="_blank" rel="external">Observables operators</a> in a chain:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
+
+stream
+  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Res: 2</span>
+</code></pre>
+<p>Now imagine you need to apply an undetermined set of operations. In that case you cannot chain them anymore. One could write the following code:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
+<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
+<span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+fns<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>fn <span class="token operator">=</span><span class="token operator">></span> stream<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+stream<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment" spellcheck="true">// Expected output ==> Res: 3</span>
+<span class="token comment" spellcheck="true">// Actual output ==> Res: 0</span>
+</code></pre>
+<p>How’s it possible that we added 3 map operations, and we get <code>Res: 0</code>? It’s like we didn’t do anything at all.</p>
+<p>Simple, because <strong>observables are immutable</strong>. So, whenever you apply an operator, it’s returning a new observable. Avoid side effects is one point of FP (Functional Programming), and RxJS is a FRP (Functional Reactive Programming) library. It’s a common pitfall to think that the operators return a mutated version of their same instance.</p>
+<h2 id="The-solution"><a href="#The-solution" class="headerlink" title="The solution"></a>The solution</h2><p>We need to store the new observable returned by every operator, and apply the next operator over that one. A simple way, following the previous example:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
+<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
+<span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+fns<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>fn <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  stream <span class="token operator">=</span> stream<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// update with new observable</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+stream<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Or, if we wanna go functional and avoid side effects, <code>reduce</code> plays very well here:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Try yourself at http://jsbin.com/qucihequdu/edit?js,console</span>
+<span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
+<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
+<span class="token keyword">const</span> original <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
+
+<span class="token keyword">const</span> mapped <span class="token operator">=</span> fns<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span>acum<span class="token punctuation">,</span> fn<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span>
+    acum<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> <span class="token function">fn</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Apply and return new observable</span>
+<span class="token punctuation">,</span> original<span class="token punctuation">)</span>
+
+mapped<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Go to <a href="http://jsbin.com/qucihequdu/edit?js,console" target="_blank" rel="external">this jsbin</a> and start playing with it!</p>
+]]></content>
+    
+    <summary type="html">
+    
+      Learn how easy is to apply a set of operations to a RxJS Observable in JavaScript
+    
+    </summary>
+    
+    
+      <category term="RxJS" scheme="http://alexjoverm.github.io/tags/RxJS/"/>
+    
+      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
+    
+  </entry>
   
   <entry>
     <title>How I made a Progressive Web App out of my Blog</title>
@@ -126,78 +198,6 @@ hexo deploy <span class="token comment" spellcheck="true"># deploys it to github
   </entry>
   
   <entry>
-    <title>Apply infinite operations to an RxJS Observable</title>
-    <link href="http://alexjoverm.github.io/2017/08/07/Apply-infinite-operations-to-an-RxJS-Observable/"/>
-    <id>http://alexjoverm.github.io/2017/08/07/Apply-infinite-operations-to-an-RxJS-Observable/</id>
-    <published>2017-08-07T06:27:38.000Z</published>
-    <updated>2017-08-14T06:40:56.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Learn how easy is to apply a set of operations to a RxJS Observable in JavaScript</p>
-<a id="more"></a>
-<img src="/2017/08/07/Apply-infinite-operations-to-an-RxJS-Observable/rxjs.png" alt="RxJS" title="RxJS">
-<p>This week, my friend <a href="https://twitter.com/alejandro_such" target="_blank" rel="external">@alejandro_such</a> asked me about how to apply infinite operations to an <a href="http://reactivex.io/rxjs/" target="_blank" rel="external">RxJS</a> observable. Honestly, is not something I stumbled upon before, but every single case you need to solve in RxJS feels like a new challenge. That makes room to write a RxJS cookbook, but that’s not why you’re reading this today 😉.</p>
-<p><em>Note: you need a bit of RxJS knowledge to follow up the article</em></p>
-<h2 id="The-problem"><a href="#The-problem" class="headerlink" title="The problem"></a>The problem</h2><p>We’re used to see and write <a href="http://reactivex.io/rxjs/manual/overview.html#operators" target="_blank" rel="external">Observables operators</a> in a chain:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">)</span>
-
-stream
-  <span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span>val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">%</span> <span class="token number">2</span> <span class="token operator">===</span> <span class="token number">0</span><span class="token punctuation">)</span>
-  <span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Res: 2</span>
-</code></pre>
-<p>Now imagine you need to apply an undetermined set of operations. In that case you cannot chain them anymore. One could write the following code:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
-<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
-<span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-
-fns<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>fn <span class="token operator">=</span><span class="token operator">></span> stream<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span><span class="token punctuation">)</span>
-
-stream<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
-<span class="token comment" spellcheck="true">// Expected output ==> Res: 3</span>
-<span class="token comment" spellcheck="true">// Actual output ==> Res: 0</span>
-</code></pre>
-<p>How’s it possible that we added 3 map operations, and we get <code>Res: 0</code>? It’s like we didn’t do anything at all.</p>
-<p>Simple, because <strong>observables are immutable</strong>. So, whenever you apply an operator, it’s returning a new observable. Avoid side effects is one point of FP (Functional Programming), and RxJS is a FRP (Functional Reactive Programming) library. It’s a common pitfall to think that the operators return a mutated version of their same instance.</p>
-<h2 id="The-solution"><a href="#The-solution" class="headerlink" title="The solution"></a>The solution</h2><p>We need to store the new observable returned by every operator, and apply the next operator over that one. A simple way, following the previous example:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
-<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
-<span class="token keyword">const</span> stream <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-
-fns<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>fn <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
-  stream <span class="token operator">=</span> stream<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>fn<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// update with new observable</span>
-<span class="token punctuation">}</span><span class="token punctuation">)</span>
-
-stream<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
-</code></pre>
-<p>Or, if we wanna go functional and avoid side effects, <code>reduce</code> plays very well here:</p>
-<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Try yourself at http://jsbin.com/qucihequdu/edit?js,console</span>
-<span class="token keyword">const</span> sum <span class="token operator">=</span> val <span class="token operator">=</span><span class="token operator">></span> val <span class="token operator">+</span> <span class="token number">1</span>
-<span class="token keyword">const</span> fns <span class="token operator">=</span> <span class="token punctuation">[</span>sum<span class="token punctuation">,</span> sum<span class="token punctuation">,</span> sum<span class="token punctuation">]</span>
-<span class="token keyword">const</span> original <span class="token operator">=</span> Rx<span class="token punctuation">.</span>Observable<span class="token punctuation">.</span><span class="token keyword">of</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">)</span>
-
-<span class="token keyword">const</span> mapped <span class="token operator">=</span> fns<span class="token punctuation">.</span><span class="token function">reduce</span><span class="token punctuation">(</span><span class="token punctuation">(</span>acum<span class="token punctuation">,</span> fn<span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span>
-    acum<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> <span class="token function">fn</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Apply and return new observable</span>
-<span class="token punctuation">,</span> original<span class="token punctuation">)</span>
-
-mapped<span class="token punctuation">.</span><span class="token function">subscribe</span><span class="token punctuation">(</span>res <span class="token operator">=</span><span class="token operator">></span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">"Res: "</span> <span class="token operator">+</span> res<span class="token punctuation">)</span><span class="token punctuation">)</span>
-</code></pre>
-<p>Go to <a href="http://jsbin.com/qucihequdu/edit?js,console" target="_blank" rel="external">this jsbin</a> and start playing with it!</p>
-]]></content>
-    
-    <summary type="html">
-    
-      Learn how easy is to apply a set of operations to a RxJS Observable in JavaScript
-    
-    </summary>
-    
-    
-      <category term="RxJS" scheme="http://alexjoverm.github.io/tags/RxJS/"/>
-    
-      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
-    
-  </entry>
-  
-  <entry>
     <title>Lazy Loading in Vue using Webpack&#39;s Code Splitting</title>
     <link href="http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/"/>
     <id>http://alexjoverm.github.io/2017/07/16/Lazy-load-in-Vue-using-Webpack-s-code-splitting/</id>
@@ -264,9 +264,9 @@ components<span class="token punctuation">:</span> <span class="token punctuatio
     </summary>
     
     
-      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
-    
       <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
+    
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
       <category term="Vuex" scheme="http://alexjoverm.github.io/tags/Vuex/"/>
     
@@ -662,9 +662,9 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
-      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
-    
       <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
+    
+      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
     
   </entry>
   
