@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/08/07/Apply-infinite-operations-to-an-RxJS-Observable/</loc>
+    
+    <lastmod>2017-08-14T06:40:56.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/03/23/Apollo-GraphQL-and-Nuxt-shenanigans/</loc>
     
     <lastmod>2017-08-10T16:37:08.000Z</lastmod>
