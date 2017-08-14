@@ -264,9 +264,9 @@ components<span class="token punctuation">:</span> <span class="token punctuatio
     </summary>
     
     
-      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
-    
       <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
+    
+      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
     
       <category term="Vuex" scheme="http://alexjoverm.github.io/tags/Vuex/"/>
     
