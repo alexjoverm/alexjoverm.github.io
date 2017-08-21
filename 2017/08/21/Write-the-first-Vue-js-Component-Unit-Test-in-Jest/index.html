@@ -1,0 +1,313 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"><meta name="author" content="Alex Jover Morales"><meta name="copyright" content="Alex Jover Morales"><link rel="author" type="text/html" href="https://twitter.com/alexjoverm"><link rel="icon" href="/alex.jpg"><link rel="canonical" content="http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/"><!-- Add to home screen for Android and modern mobile browsers--><link rel="manifest" href="/manifest.json"><meta name="theme-color" content="#008aff"><!-- Add to home screen for Safari on iOS--><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="apple-mobile-web-app-title" content="Alex Jover Blog"><link rel="apple-touch-icon" href="/images/icons/icon-152x152.png"><!-- Add to home screen for Windows--><meta name="msapplication-TileImage" content="/images/icons/icon-152x152.png"><meta name="msapplication-TileColor" content="#000000"><title>Write the first Vue.js Component Unit Test in Jest | Alex Jover Morales</title><meta name="description" content="Learn how to write unit tests for VueJS components with the official tools and the Jest framework."><meta name="twitter:title" content="Write the first Vue.js Component Unit Test in Jest"><meta name="twitter:description" content="Learn how to write unit tests for VueJS components with the official tools and the Jest framework."><meta name="og:title" content="Write the first Vue.js Component Unit Test in Jest"><meta name="og:description" content="Learn how to write unit tests for VueJS components with the official tools and the Jest framework."><meta name="article:author" content="https://www.facebook.com/alex.jovermorales"><meta name="article:published_time" content="2017-08-21T06:25:40.000Z"><meta name="article:modified_time" content="2017-08-21T06:27:05.000Z"><meta name="article:tag" content="VueJS"><meta name="article:tag" content="JavaScript"><meta name="article:tag" content="Testing"><meta name="twitter:card" content="summary"><meta name="og:image" content="http://alexjoverm.github.io/alex.jpg"><meta name="twitter:image" content="http://alexjoverm.github.io/alex.jpg"><meta name="twitter:site" content="@alexjoverm"><meta name="twitter:creator" content="@alexjoverm"><meta name="og:site_name" content="Alex Jover"><meta name="og:locale" content="en_EN"><meta name="og:type" content="article"><meta name="og:url" content="http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/"><meta name="article:author" content="https://www.facebook.com/alex.jovermorales"><link rel="me" type="text/html" href="https://twitter.com/alexjoverm"><link rel="me" type="text/html" href="https://github.com/alexjoverm"><link rel="me" type="text/html" href="https://www.linkedin.com/in/alex-jover-morales-994752102/"><link rel="me" type="text/html" href="http://stackoverflow.com/users/4191146/alex-jm"><link rel="alternate" type="application/rss+xml" title="Alex Jover" href="/atom.xml"><link rel="stylesheet" type="text/css" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"><link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"><link rel="stylesheet" type="text/css" href="/css/main.css"><link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700"><meta property="algolia:search" data-application-id="6252178E0A" data-api-key="ead5c5a5a82108a54f04c9f610a54ee2" data-index-name="blog"><link rel="stylesheet" href="/css/prism-okaidia.css" type="text/css"></head><body><div id="update-message">New content is available<button onclick="location.reload()" class="btn button-white">Reload</button></div><nav class="navbar navbar-default navbar-fixed-top navbar-custom top-nav-short"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="navbar-header"><button type="button" data-toggle="collapse" data-target="#main-navbar" class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button><a href="/" class="navbar-brand">Blog</a></div><div id="main-navbar" class="collapse navbar-collapse"><ul class="nav navbar-nav navbar-right"><li class="search"><div id="search-box-container" class="search-box-container"><input id="search-box" type="search" placeholder="Search..." name="search" autocomplete="off" class="search-box"><svg viewbox="654 -372 1664 1664" class="search-box-icon"><path d="M1806,332c0-123.3-43.8-228.8-131.5-316.5C1586.8-72.2,1481.3-116,1358-116s-228.8,43.8-316.5,131.5  C953.8,103.2,910,208.7,910,332s43.8,228.8,131.5,316.5C1129.2,736.2,1234.7,780,1358,780s228.8-43.8,316.5-131.5  C1762.2,560.8,1806,455.3,1806,332z M2318,1164c0,34.7-12.7,64.7-38,90s-55.3,38-90,38c-36,0-66-12.7-90-38l-343-342  c-119.3,82.7-252.3,124-399,124c-95.3,0-186.5-18.5-273.5-55.5s-162-87-225-150s-113-138-150-225S654,427.3,654,332  s18.5-186.5,55.5-273.5s87-162,150-225s138-113,225-150S1262.7-372,1358-372s186.5,18.5,273.5,55.5s162,87,225,150s113,138,150,225  S2062,236.7,2062,332c0,146.7-41.3,279.7-124,399l343,343C2305.7,1098.7,2318,1128.7,2318,1164z"></path></svg></div></li><li><a href="https://egghead.io/instructors/alex-jover-morales">Videos</a></li><li><a href="/series">Series</a></li><li><a href="/archives">Archive</a></li><li><a href="/about">About</a></li></ul></div></div></div></div></nav><header class="header-section"><div class="intro-header no-img"><div class="container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1"><div class="post-heading"><h1>Write the first Vue.js Component Unit Test in Jest</h1><p class="post-meta">Posted on Aug 21 2017 · <a href="/tags/VueJS/" class="tag post-meta">VueJS</a> · <a href="/tags/JavaScript/" class="tag post-meta">JavaScript</a> · <a href="/tags/Testing/" class="tag post-meta">Testing</a></p></div></div></div></div></div></header><div id="signup-form-modal"><form action="https://github.us16.list-manage.com/subscribe/post" method="POST" class="form signup-form"><input type="hidden" name="u" value="534e314884644825b957a5eee"><input type="hidden" name="id" value="e05e60374d"><div class="close-button">&times;</div><h4 class="text-center">Get upcoming Guides, Series, EBooks and Courses!</h4><div class="col-sm-4 fields"><input id="MERGE0" type="email" required placeholder="Your email" autocapitalize="off" autocorrect="off" name="MERGE0" class="form-control"></div><div class="col-sm-4 fields"><input id="MERGE1" type="text" name="MERGE1" placeholder="Your name" class="form-control"></div><div class="col-sm-4 fields"><button type="submit" class="button-white btn btn-block">Subscribe</button></div></form><div class="form-backdrop"></div></div><main class="post-content container"><div class="row"><div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <div class="post-serie">
+                <header>
+                    <span class="serie-badge">Serie</span>
+                    <a href="/series/Unit-Testing-Vue-js-Components-with-the-Official-Vue-Testing-Tools" alt="Unit Testing Vue.js Components with the Official Vue Testing Tools">
+                        Unit Testing Vue.js Components with the Official Vue Testing Tools
+                    </a>
+                </header>
+
+                <ol class="post-list">
+                    
+                        <li class="current">
+                            Write the first Vue.js Component Unit Test in Jest
+                        </li>
+                        <li false>
+                            Test Deeply Rendered Vue.js Components in Jest
+                        </li>
+                        <li false>
+                            Test Styles and Structure of Vue.js Components in Jest
+                        </li>
+                        <li false>
+                            Test Properties, Computed Properties and Methods in Vue.js Components with Jest
+                        </li>
+                        <li false>
+                            Test Lifecycle Hooks in Vue.js Components with Jest
+                        </li>
+                        <li false>
+                            Test Vue.js Events and Slots in Jest
+                        </li>
+                        <li false>
+                            Mock Module Dependencies in Jest
+                        </li>
+                        <li false>
+                            Enhance Jest configuration with Module Aliases
+                        </li>
+                </ol>
+            </div>
+        <article role="main" class="blog-post"><p>Learn how to write unit tests with the official VueJS tools and the Jest framework.</p>
+<a id="more"></a>
+<p><a href="https://github.com/vuejs/vue-test-utils" target="_blank" rel="external">vue-test-utils</a>, the official VueJS testing library and based on <a href="https://github.com/eddyerburgh/avoriaz" target="_blank" rel="external">avoriaz</a>, is just around the corner. <a href="https://twitter.com/EddYerburgh" target="_blank" rel="external">@EddYerburgh</a> is indeed doing a very good job creating it. It provides all necessary tooling for making easy to write unit test in a VueJS application.</p>
+<p><a href="https://facebook.github.io/jest" target="_blank" rel="external">Jest</a>, on the other side, is the testing framework developed at Facebook, which makes testing a breeze, with awesome features such as:</p>
+<ul>
+<li>Almost no config by default</li>
+<li>Very cool interactive mode</li>
+<li>Run tests in parallel</li>
+<li>Spies, stubs and mocks out of the box</li>
+<li>Built in code coverage</li>
+<li>Snapshot testing</li>
+<li>Module mocking utilities</li>
+</ul>
+<p>Probably you’ve already written test without this tools, and just by using karma + mocha + chai + sinon + …, but you’ll see how much easier it can be 😉.</p>
+<h2 id="Set-up-a-vue-test-sample-project"><a href="#Set-up-a-vue-test-sample-project" class="headerlink" title="Set up a vue-test sample project"></a>Set up a vue-test sample project</h2><p>Let’s start by creating a new project using <a href="https://github.com/vuejs/vue-cli" target="_blank" rel="external"><code>vue-cli</code></a> answering NO to all yes/no questions:</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token function">npm</span> <span class="token function">install</span> -g vue-cli
+vue init webpack vue-test
+<span class="token function">cd</span> vue-test
+</code></pre>
+<p>Then we’ll need to install some dependencies:</p>
+<pre class=" language-bash"><code class="language-bash"><span class="token comment" spellcheck="true"># Install dependencies</span>
+<span class="token function">npm</span> i -D jest jest-vue-preprocessor babel-jest
+</code></pre>
+<p><a href="https://github.com/vire/jest-vue-preprocessor" target="_blank" rel="external"><code>jest-vue-preprocessor</code></a> is needed for making jest understand <code>.vue</code> files, and <a href="https://github.com/babel/babel-jest" target="_blank" rel="external"><code>babel-jest</code></a> for the integration with Babel.</p>
+<p>As per <code>vue-test-utils</code>, it <strong>hasn’t been released yet</strong>, but for now you can add it to your <code>package.json</code> from the source:</p>
+<pre class=" language-json"><code class="language-json"><span class="token property">"devDependencies"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  ...
+  <span class="token property">"vue-test-utils"</span><span class="token operator">:</span> <span class="token string">"git+https://github.com/vuejs/vue-test-utils.git"</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>And run <code>npm install</code>.</p>
+<p>Let’s add the following Jest configuration in the <code>package.json</code>:</p>
+<pre class=" language-json"><code class="language-json">...
+<span class="token property">"jest"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+  <span class="token property">"moduleNameMapper"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"^vue$"</span><span class="token operator">:</span> <span class="token string">"vue/dist/vue.common.js"</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  <span class="token property">"moduleFileExtensions"</span><span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token string">"js"</span><span class="token punctuation">,</span>
+    <span class="token string">"vue"</span>
+  <span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token property">"transform"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"^.+\\.js$"</span><span class="token operator">:</span> <span class="token string">"&lt;rootDir>/node_modules/babel-jest"</span><span class="token punctuation">,</span>
+    <span class="token property">".*\\.(vue)$"</span><span class="token operator">:</span> <span class="token string">"&lt;rootDir>/node_modules/jest-vue-preprocessor"</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+...
+</code></pre>
+<p><code>moduleFileExtensions</code> will tell Jest which extensions to look for, and <code>transform</code> which preprocessor to use for a file extension.</p>
+<p>At last, add a <code>test</code> script to the <code>package.json</code>:</p>
+<pre class=" language-json"><code class="language-json"><span class="token punctuation">{</span>
+  <span class="token property">"scripts"</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token property">"test"</span><span class="token operator">:</span> <span class="token string">"jest"</span><span class="token punctuation">,</span>
+    ...
+  <span class="token punctuation">}</span><span class="token punctuation">,</span>
+  ...
+<span class="token punctuation">}</span>
+</code></pre>
+<h2 id="Testing-a-Component"><a href="#Testing-a-Component" class="headerlink" title="Testing a Component"></a>Testing a Component</h2><p>I’ll be using Single File Components here, and I haven’t checked if it works by splitting them in their own <code>html</code>, <code>css</code> or <code>js</code> files, so let’s assume you’re doing that as well.</p>
+<p>First create a <code>MessageList.vue</code> component under <code>src/components</code>:</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">v-for</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>message in messages<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+            {{ message }}
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span>
+export default {
+  name: 'list',
+  props: ['messages']
+}
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>And update <code>App.vue</code> to use it, as follows:</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">id</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>app<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>MessageList</span> <span class="token attr-name">:messages</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>messages<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span>
+import MessageList from './components/MessageList'
+
+export default {
+  name: 'app',
+  data: () => ({ messages: ['Hey John', 'Howdy Paco'] }),
+  components: {
+    MessageList
+  }
+}
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>We have already a couple of components that we can test. Let’s create a <code>test</code> folder under the project root, and a <code>App.test.js</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">import</span> Vue <span class="token keyword">from</span> <span class="token string">'vue'</span>
+<span class="token keyword">import</span> App <span class="token keyword">from</span> <span class="token string">'../src/App'</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'App.test.js'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> cmp<span class="token punctuation">,</span> vm
+
+  <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    cmp <span class="token operator">=</span> Vue<span class="token punctuation">.</span><span class="token function">extend</span><span class="token punctuation">(</span>App<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Create a copy of the original component</span>
+    vm <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">cmp</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+      data<span class="token punctuation">:</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// Replace data value with this fake data</span>
+        messages<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'Cat'</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">$mount</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// Instances and mounts the component</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'equals messages to ["Cat"]'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>vm<span class="token punctuation">.</span>messages<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'Cat'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Right now, if we run <code>npm test</code> (or <code>npm t</code> as a shorthand version), the test should run and pass. Since we’re modifying the tests, let’s better run it in <strong>watch mode</strong>:</p>
+<pre class=" language-shell"><code class="language-shell">npm t -- --watch
+</code></pre>
+<h3 id="The-problem-with-nested-components"><a href="#The-problem-with-nested-components" class="headerlink" title="The problem with nested components"></a>The problem with nested components</h3><p>This test is too simple. Let’s check that the output is the expected as well. For that we can use the amazing Snapshots feature of Jest, that will generate a snapshot of the output and check it against in the upcoming runs. Add after the previous <code>it</code> in <code>App.test.js</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'has the expected html structure'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>vm<span class="token punctuation">.</span>$el<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toMatchSnapshot</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>That will create a <code>test/__snapshots__/App.test.js.snap</code> file. Let’s open it and inspect it:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Jest Snapshot v1, https://goo.gl/fbAQLP</span>
+
+exports<span class="token punctuation">[</span><span class="token template-string"><span class="token string">`App.test.js has the expected html structure 1`</span></span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token template-string"><span class="token string">`
+&lt;div
+  id="app"
+>
+  &lt;ul>
+    &lt;li>
+      Cat
+    &lt;/li>
+  &lt;/ul>
+&lt;/div>
+`</span></span><span class="token punctuation">;</span>
+</code></pre>
+<p>In case you haven’t noticed, there is a big problem here: the <code>MessageList</code> component has been rendered as well. <strong>Unit tests must be tested as an independent unit</strong>, meaning that in <code>App.test.js</code> we wanna test <code>App</code> component and don’t care at all about anything else.</p>
+<p>This can be the reason of several problems. Imagine for example, that the children components (<code>MessageList</code> in this case) perform side effect operations on the <code>created</code> hook, such as calling <code>fetch</code>, a Vuex action or state changes? That’s something we definitely don’t want.</p>
+<p>Luckily, <strong>Shallow Rendering</strong> solves this nicely.</p>
+<h3 id="What-is-Shallow-Rendering"><a href="#What-is-Shallow-Rendering" class="headerlink" title="What is Shallow Rendering?"></a>What is Shallow Rendering?</h3><p><a href="http://airbnb.io/enzyme/docs/api/shallow.html" target="_blank" rel="external">Shallow Rendering</a> is a technique that assures your component is rendering without children. This is useful for:</p>
+<ul>
+<li>Testing only the component you want to test (that’s what Unit Test stands for)</li>
+<li>Avoid side effects that children components can have, such as making HTTP calls, calling store actions…</li>
+</ul>
+<p>For more info, <a href="http://engineering-blog.alphasights.com/testing-react-components-with-shallow-rendering/" target="_blank" rel="external">this article</a> explains it quite well.</p>
+<h2 id="Testing-a-Component-with-vue-test-utils"><a href="#Testing-a-Component-with-vue-test-utils" class="headerlink" title="Testing a Component with vue-test-utils"></a>Testing a Component with vue-test-utils</h2><p><code>vue-test-utils</code> provide us with Shallow Rendering among other features. We could rewrite the previous test as follows:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> shallow <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue-test-utils'</span>
+<span class="token keyword">import</span> App <span class="token keyword">from</span> <span class="token string">'../src/App'</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'App.test.js'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> cmp
+
+  <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    cmp <span class="token operator">=</span> <span class="token function">shallow</span><span class="token punctuation">(</span>App<span class="token punctuation">,</span> <span class="token punctuation">{</span> <span class="token comment" spellcheck="true">// Create a shallow instance of the component</span>
+      data<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        messages<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'Cat'</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'equals messages to ["Cat"]'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token comment" spellcheck="true">// Within cmp.vm, we can access all Vue instance methods</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span>vm<span class="token punctuation">.</span>messages<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'Cat'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'has the expected html structure'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span>element<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toMatchSnapshot</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>And now, if you’re still running Jest in watching mode, you’ll see the test still pass, but the Snapshot doesn’t match. Press <code>u</code> to regenerate it. Open and inspect it again:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Jest Snapshot v1, https://goo.gl/fbAQLP</span>
+
+exports<span class="token punctuation">[</span><span class="token template-string"><span class="token string">`App.test.js has the expected html structure 1`</span></span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token template-string"><span class="token string">`
+&lt;div
+  id="app"
+>
+  &lt;!--  -->
+&lt;/div>
+`</span></span><span class="token punctuation">;</span>
+</code></pre>
+<p>You see? Now no children have been rendered and we tested the <code>App</code> component <strong>fully isolated</strong> from the component tree. Also, if you have any <code>created</code> or whatever hooks in the children components, they haven’t been called either 😉.</p>
+<p>If you’re curious about <strong>how shallow render is implemented</strong>, check out the <a href="https://github.com/vuejs/vue-test-utils/blob/master/src/lib/stub-components.js" target="_blank" rel="external">source code</a> and you’ll see that basically is stubbing the <code>components</code> key, the <code>render</code> method and the lifecycle hooks.</p>
+<p>In the same vein, you can implement the <code>MessageList.test.js</code> test as follows:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> shallow <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue-test-utils'</span>
+<span class="token keyword">import</span> MessageList <span class="token keyword">from</span> <span class="token string">'../src/components/MessageList'</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'MessageList.test.js'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> cmp
+
+  <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    cmp <span class="token operator">=</span> <span class="token function">shallow</span><span class="token punctuation">(</span>MessageList<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// Beaware that props is overriden using `propsData`</span>
+      propsData<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        messages<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'Cat'</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'has received ["Cat"] as the message property'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span>vm<span class="token punctuation">.</span>messages<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'Cat'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'has the expected html structure'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span>element<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toMatchSnapshot</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Find the <a href="https://github.com/alexjoverm/vue-testing-series/tree/lesson-1" target="_blank" rel="external">full example on Github</a>.</p>
+
+    <p><a class="twitter-share-button"
+  href="https://twitter.com/intent/tweet?text=Write%20the%20first%20Vue.js%20Component%20Unit%20Test%20in%20Jest&url=http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/&hashtags=VueJS%2CJavaScript%2CTesting&via=alexjoverm">Tweet</a></p>
+
+    <p>If you like it, please go and share it!
+    You can follow me <a href="https://egghead.io/instructors/alex-jover-morales">recording videos on Egghead</a>
+    or on twitter as <a href="https://twitter.com/alexjoverm">@alexjoverm</a>. Any questions? Shoot!</p>
+  </article><ul class="pager blog-pager"><li class="next"><a href="/2017/08/14/Apply-infinite-operations-to-an-RxJS-Observable/" data-toggle="tooltip" data-placement="top" title="Apply infinite operations to an RxJS Observable">Next Post →</a></li></ul><div id="signup-form-footer"><form action="https://github.us16.list-manage.com/subscribe/post" method="POST" class="form signup-form"><input type="hidden" name="u" value="534e314884644825b957a5eee"><input type="hidden" name="id" value="e05e60374d"><div class="close-button">&times;</div><h4 class="text-center">Get upcoming Guides, Series, EBooks and Courses!</h4><div class="col-sm-4 fields"><input id="MERGE0" type="email" required placeholder="Your email" autocapitalize="off" autocorrect="off" name="MERGE0" class="form-control"></div><div class="col-sm-4 fields"><input id="MERGE1" type="text" name="MERGE1" placeholder="Your name" class="form-control"></div><div class="col-sm-4 fields"><button type="submit" class="button-white btn btn-block">Subscribe</button></div></form></div><div class="disqus-comments"><div class="comments"><div id="disqus_thread"></div></div></div><script>var url_parts = window.location.href.split("?");
+var disqus_url = url_parts[0];
+(function () {
+    var dsq = document.createElement('script');
+    dsq.type = 'text/javascript';
+    dsq.async = true;
+    dsq.src = "//alexjm-blog.disqus.com/embed.js";
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script></div></div></main><footer><div class="container beautiful-jekyll-footer"><div class="row"><p class="copyright text-muted">© Alex Jover Morales • 2017</p></div></div></footer><script src="/js/sw-register.js"></script><script src="/js/jquery-1.11.2.min.js"></script><script src="/js/bootstrap.min.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/algoliasearch/3/algoliasearchLite.min.js"></script><script src="https://cdn.jsdelivr.net/autocomplete.js/0/autocomplete.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-throttle-debounce/1.1/jquery.ba-throttle-debounce.min.js"></script><script>var algoliaConfig = document.querySelector('meta[property="algolia:search"]').dataset
+
+// Initialize autocomplete menu
+var client = algoliasearch(algoliaConfig.applicationId, algoliaConfig.apiKey)
+var index = client.initIndex(algoliaConfig.indexName)
+//initialize autocomplete on search input (ID selector must match)
+autocomplete('#search-box', { hint: false, appendTo: 'body', debug: true }, {
+  source: autocomplete.sources.hits(index, {hitsPerPage: 5}),
+  //value to be displayed in input control after user's suggestion selection
+  displayKey: 'name',
+  //hash of templates used when rendering dataset
+  templates: {
+  //'suggestion' templating function used to render a single suggestion
+  suggestion: function(suggestion) {
+    let link = '<a href="'+ suggestion.permalink +'">' +
+      suggestion._highlightResult.title.value + '</a>'
+
+    // @Todo: add <span> with type before the link
+    return link
+    }
+  }
+})
+</script><script>window.twttr = (function(d, s, id) {
+var js, fjs = d.getElementsByTagName(s)[0],
+t = window.twttr || {};
+if (d.getElementById(id)) return t;
+js = d.createElement(s);
+js.id = id;
+js.src = "https://platform.twitter.com/widgets.js";
+fjs.parentNode.insertBefore(js, fjs);
+t._e = [];
+t.ready = function(f) {
+t._e.push(f);
+};
+return t;
+}(document, "script", "twitter-wjs"));
+
+</script><script>(function (i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+            m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+ga('create', 'UA-93226517-1', 'auto');
+ga('send', 'pageview');</script></body></html>
