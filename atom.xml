@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-08-21T06:27:05.000Z</updated>
+  <updated>2017-08-28T09:00:50.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -14,6 +14,118 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Test Deeply Rendered Vue.js Components in Jest</title>
+    <link href="http://alexjoverm.github.io/2017/08/28/Test-Deeply-Rendered-Vue-js-Components-in-Jest/"/>
+    <id>http://alexjoverm.github.io/2017/08/28/Test-Deeply-Rendered-Vue-js-Components-in-Jest/</id>
+    <published>2017-08-28T09:00:50.000Z</published>
+    <updated>2017-08-28T09:00:50.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Let’s see how to use vue-test-utils to test a fully rendered component tree.</p>
+<a id="more"></a>
+<p>In  we’ve seen how to use Shallow Rendering to test a component in isolation, preventing the components sub-tree from rendering.</p>
+<p>But in some cases, we could want to test components that behave as a group, or <a href="http://atomicdesign.bradfrost.com/chapter-2/#molecules" target="_blank" rel="external">molecules</a> as stated in Atomic Design. Keep in mind that this apply to <a href="https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0" target="_blank" rel="external">Presentational Components</a>, since they’re unaware of app state and logic. In most case, you’d want to use Shallow Rendering for Container components.</p>
+<h2 id="Adding-a-Message-Component"><a href="#Adding-a-Message-Component" class="headerlink" title="Adding a Message Component"></a>Adding a Message Component</h2><p>For the case of a Message and MessageList components, apart from writing their own unit tests, we could want to test them both as a unit as well.</p>
+<p>Let’s start by creating <code>components/Message.vue</code>:</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>message<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>{{message}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span>
+  export default {
+    props: ['message']
+  }
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>And update <code>components/MessageList.vue</code> to use it:</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>template</span><span class="token punctuation">></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>ul</span><span class="token punctuation">></span></span>
+        <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Message</span> <span class="token attr-name">:message</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>message<span class="token punctuation">"</span></span> <span class="token attr-name">v-for</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>message in messages<span class="token punctuation">"</span></span><span class="token punctuation">/></span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>ul</span><span class="token punctuation">></span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>template</span><span class="token punctuation">></span></span>
+
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>script</span><span class="token punctuation">></span></span>
+import Message from './Message'
+
+export default {
+  props: ['messages'],
+  components: {
+    Message
+  }
+}
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>script</span><span class="token punctuation">></span></span>
+</code></pre>
+<h2 id="Testing-MessageList-with-Message-Component"><a href="#Testing-MessageList-with-Message-Component" class="headerlink" title="Testing MessageList with Message Component"></a>Testing MessageList with Message Component</h2><p>To test MessageList with Deep Rendering, we just need to use <code>mount</code> instead of <code>shallow</code> in the previously created <code>test/MessageList.test.js</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> mount <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue-test-utils'</span>
+<span class="token keyword">import</span> MessageList <span class="token keyword">from</span> <span class="token string">'../src/components/MessageList'</span>
+
+<span class="token function">describe</span><span class="token punctuation">(</span><span class="token string">'MessageList.test.js'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> cmp
+
+  <span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    cmp <span class="token operator">=</span> <span class="token function">mount</span><span class="token punctuation">(</span>MessageList<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+      <span class="token comment" spellcheck="true">// Beaware that props is overriden using `propsData`</span>
+      propsData<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+        messages<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'Cat'</span><span class="token punctuation">]</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'has received ["Cat"] as the message property'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span>vm<span class="token punctuation">.</span>messages<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token string">'Cat'</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'has the expected html structure'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span>element<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toMatchSnapshot</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<blockquote>
+<p>Btw, have you realized about the <code>beforeEach</code> thing? That’s a very clean way to create a clean component before each test, which is very important in unit testing, since it defines that test shouldn’t depend on each other.</p>
+</blockquote>
+<p>Both <code>mount</code> and <code>shallow</code> use exactly the same API, the difference is in the rendering. I’ll show you progressively the API along in this series.</p>
+<p>If you run <code>npm t</code> you’ll see the test are failing because the Snapshot doesn’t match for <code>MessageList.test.js</code>. To regenerate them, run it with <code>-u</code> option:</p>
+<pre><code>npm t -- -u
+</code></pre><p>Then if you open and inspect <code>test/__snapshots__/MessageList.test.js.snap</code>, you’ll see the <code>class=&quot;message&quot;</code> is there, meaning the component has been rendered.</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// Jest Snapshot v1, https://goo.gl/fbAQLP</span>
+
+exports<span class="token punctuation">[</span><span class="token template-string"><span class="token string">`MessageList.test.js has the expected html structure 1`</span></span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token template-string"><span class="token string">`
+&lt;ul>
+  &lt;li
+    class="message"
+  >
+    Cat
+  &lt;/li>
+&lt;/ul>
+`</span></span><span class="token punctuation">;</span>
+</code></pre>
+<p>Keep in mind to <strong>avoid deep rendering when there can be side effects</strong>, since the children component hooks, such <code>created</code> and <code>mount</code> will be triggered, and there can be HTTP calls or other side effects there that we don’t want to be called. If you wanna try what I’m saying, add to the <code>Message.vue</code> component a <code>console.log</code> in the created hook:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">export</span> <span class="token keyword">default</span> <span class="token punctuation">{</span>
+  props<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token string">'message'</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token function">created</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'CREATED!'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Then if you run the tests again with <code>npm t</code>, you’ll see the <code>&quot;CREATED!&quot;</code> text in the terminal output. So, be cautious.</p>
+<p>You can find the <a href="https://github.com/alexjoverm/vue-testing-series/tree/https://github.com/alexjoverm/vue-testing-series/tree/Test-fully-rendered-Vue-js-Components-in-Jest" target="_blank" rel="external">full example on Github</a>.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      Let&#39;s see how to use vue-test-utils to test a fully rendered component tree.
+    
+    </summary>
+    
+    
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
+    
+      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
+    
+      <category term="Testing" scheme="http://alexjoverm.github.io/tags/Testing/"/>
+    
+  </entry>
   
   <entry>
     <title>Write the first Vue.js Component Unit Test in Jest</title>
