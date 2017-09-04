@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-08-28T09:00:50.000Z</updated>
+  <updated>2017-09-04T06:36:01.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -14,6 +14,105 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Test Styles and Structure of Vue.js Components in Jest</title>
+    <link href="http://alexjoverm.github.io/2017/09/04/Test-Styles-and-Structure-of-Vue-js-Components-in-Jest/"/>
+    <id>http://alexjoverm.github.io/2017/09/04/Test-Styles-and-Structure-of-Vue-js-Components-in-Jest/</id>
+    <published>2017-09-04T06:36:01.000Z</published>
+    <updated>2017-09-04T06:36:01.000Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="https://github.com/vuejs/vue-test-utils" target="_blank" rel="external">vue-test-utils</a> provide us with a set of utilities to assert on Vue.js components.</p>
+<a id="more"></a>
+<p>So far, in the tests we’ve tested via <a href="https://facebook.github.io/jest/docs/snapshot-testing.html" target="_blank" rel="external">Jest Snapshots</a>. This is great, but sometimes we wanna assert something more specific.</p>
+<p>Although you can access the Vue instance via <a href="https://github.com/alexjoverm/vue-testing-series/blob/master/test/MessageList.test.js#L17" target="_blank" rel="external"><code>cmp.vm</code></a>, you have a set of utilities at your disposal to make it easier. Let’s see what we can do.</p>
+<h2 id="The-Wrapper-object"><a href="#The-Wrapper-object" class="headerlink" title="The Wrapper object"></a>The Wrapper object</h2><p>The <code>Wrapper</code> is the main object of <code>vue-test-utils</code>. It is the type returned by <code>mount</code>, <code>shallow</code>, <code>find</code> and <code>findAll</code> functions. You can <a href="https://github.com/vuejs/vue-test-utils/blob/master/types/index.d.ts#L34" target="_blank" rel="external">see here</a> the whole API and typings.</p>
+<h3 id="find-and-findAll"><a href="#find-and-findAll" class="headerlink" title="find and findAll"></a><code>find</code> and <code>findAll</code></h3><p>They accept a <a href="https://github.com/vuejs/vue-test-utils/blob/master/types/index.d.ts#L11" target="_blank" rel="external">Selector</a> as an argument, which can be both a CSS selector or a Vue Component.</p>
+<p>So we can do things like:</p>
+<pre class=" language-javascript"><code class="language-javascript">  <span class="token keyword">let</span> cmp <span class="token operator">=</span> <span class="token function">mount</span><span class="token punctuation">(</span>MessageList<span class="token punctuation">)</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">'.message'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>element<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeInstanceOf</span><span class="token punctuation">(</span>HTMLElement<span class="token punctuation">)</span>
+
+  <span class="token comment" spellcheck="true">// Or even call it multiple times</span>
+  <span class="token keyword">let</span> el <span class="token operator">=</span> cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">'.message'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">'span'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>element
+
+  <span class="token comment" spellcheck="true">// Although for the previous example, we could do it in one</span>
+  <span class="token keyword">let</span> el <span class="token operator">=</span> cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">'.message span'</span><span class="token punctuation">)</span><span class="token punctuation">.</span>element
+</code></pre>
+<h3 id="Asserting-Structure-and-Style"><a href="#Asserting-Structure-and-Style" class="headerlink" title="Asserting Structure and Style"></a>Asserting Structure and Style</h3><p>Let’s add more tests to <code>MessageList.test.js</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'is a MessageList component'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">is</span><span class="token punctuation">(</span>MessageList<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+
+  <span class="token comment" spellcheck="true">// Or with CSS selector</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">is</span><span class="token punctuation">(</span><span class="token string">'ul'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'contains a Message component'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span>Message<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+
+  <span class="token comment" spellcheck="true">// Or with CSS selector</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">contains</span><span class="token punctuation">(</span><span class="token string">'.message'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Here we’re using <code>is</code> to assert the root component type, and <code>contains</code> to check for sub-components existence. Just as <code>find</code> they receive a Selector, which can be a CSS Selector or a Component.</p>
+<p>We have some utils to assert the <strong>Vue instance</strong>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Both MessageList and Message are vue instances'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">isVueInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Message<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isVueInstance</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>Now we’re going to assert <strong>Structure</strong> in more detail:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Message element exists'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span><span class="token string">'.message'</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">exists</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Message is not empty'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Message<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">isEmpty</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">false</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Message has a class attribute set to "message"'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token comment" spellcheck="true">// For asserting "class", the `hasClass` method is easier</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Message<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">hasAttribute</span><span class="token punctuation">(</span><span class="token string">'class'</span><span class="token punctuation">,</span> <span class="token string">'message'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p><code>exists</code>, <code>isEmpty</code> and <code>hasAttribute</code> comes in very handy for this.</p>
+<p>Then, we have <code>hasClass</code> and <code>hasStyle</code> to assert <strong>Styling</strong>. Let’s update the <code>Message.vue</code> component with a style, since <code>hasStyle</code> asserts only inline styles:</p>
+<pre class=" language-html"><code class="language-html"><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>li</span><span class="token style-attr language-css"><span class="token attr-name"> <span class="token attr-name">style</span></span><span class="token punctuation">="</span><span class="token attr-value"><span class="token property">margin-top</span><span class="token punctuation">:</span> <span class="token number">10</span>px</span><span class="token punctuation">"</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>message<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>{{message}}<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>li</span><span class="token punctuation">></span></span>
+</code></pre>
+<p>Here the tests:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Message component has the .message class'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Message<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">hasClass</span><span class="token punctuation">(</span><span class="token string">'message'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Message component has style padding-top: 10'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Message<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">hasStyle</span><span class="token punctuation">(</span><span class="token string">'padding-top'</span><span class="token punctuation">,</span> <span class="token string">'10'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<h3 id="get-methods"><a href="#get-methods" class="headerlink" title="get methods"></a><code>get</code> methods</h3><p>As you’ve seen, we have some useful utils to assert Vue components. Most use the form of <code>hasX</code>, which is great, but to have a <code>getX</code> brings better testing experience, in terms of flexibility and debugging. So you could rewrite the following example:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// `has` form</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Message<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">hasAttribute</span><span class="token punctuation">(</span><span class="token string">'class'</span><span class="token punctuation">,</span> <span class="token string">'message'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token boolean">true</span><span class="token punctuation">)</span>
+
+<span class="token comment" spellcheck="true">// `get` form</span>
+<span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>Message<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">getAttribute</span><span class="token punctuation">(</span><span class="token string">'class'</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBe</span><span class="token punctuation">(</span><span class="token string">'message'</span><span class="token punctuation">)</span>
+</code></pre>
+<p>This is <a href="https://github.com/vuejs/vue-test-utils/issues/27" target="_blank" rel="external">under discussion</a> and seems like it will be added to the library at some point.</p>
+<h2 id="Wrapping-up"><a href="#Wrapping-up" class="headerlink" title="Wrapping up"></a>Wrapping up</h2><p>There is a bunch of utils to make easier testing Vue components. You can find them all in <a href="https://github.com/vuejs/vue-test-utils/blob/master/types/index.d.ts" target="_blank" rel="external">the typings file</a>.</p>
+<p>You can find the working code in <a href="https://github.com/alexjoverm/vue-testing-series/blob/Test-Styles-and-Structure-in-Vue-js-and-Jest/test/MessageList.test.js" target="_blank" rel="external">this repo</a>.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      vue-test-utils provide us with a set of utilities to assert on Vue.js components.
+    
+    </summary>
+    
+    
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
+    
+      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
+    
+      <category term="Testing" scheme="http://alexjoverm.github.io/tags/Testing/"/>
+    
+  </entry>
   
   <entry>
     <title>Test Deeply Rendered Vue.js Components in Jest</title>
