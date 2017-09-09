@@ -231,7 +231,7 @@ exports<span class="token punctuation">[</span><span class="token template-strin
     <link href="http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/"/>
     <id>http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/</id>
     <published>2017-08-21T06:25:40.000Z</published>
-    <updated>2017-08-21T06:27:05.000Z</updated>
+    <updated>2017-09-09T20:58:00.000Z</updated>
     
     <content type="html"><![CDATA[<p>Learn how to write unit tests with the official VueJS tools and the Jest framework.</p>
 <a id="more"></a>
@@ -379,7 +379,6 @@ exports<span class="token punctuation">[</span><span class="token template-strin
 <li>Testing only the component you want to test (that’s what Unit Test stands for)</li>
 <li>Avoid side effects that children components can have, such as making HTTP calls, calling store actions…</li>
 </ul>
-<p>For more info, <a href="http://engineering-blog.alphasights.com/testing-react-components-with-shallow-rendering/" target="_blank" rel="external">this article</a> explains it quite well.</p>
 <h2 id="Testing-a-Component-with-vue-test-utils"><a href="#Testing-a-Component-with-vue-test-utils" class="headerlink" title="Testing a Component with vue-test-utils"></a>Testing a Component with vue-test-utils</h2><p><code>vue-test-utils</code> provide us with Shallow Rendering among other features. We could rewrite the previous test as follows:</p>
 <pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">import</span> <span class="token punctuation">{</span> shallow <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue-test-utils'</span>
 <span class="token keyword">import</span> App <span class="token keyword">from</span> <span class="token string">'../src/App'</span>

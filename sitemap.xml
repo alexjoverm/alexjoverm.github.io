@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/</loc>
+    
+    <lastmod>2017-09-09T20:58:00.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/09/04/Test-Styles-and-Structure-of-Vue-js-Components-in-Jest/</loc>
     
     <lastmod>2017-09-04T06:36:01.000Z</lastmod>
@@ -12,13 +19,6 @@
     <loc>http://alexjoverm.github.io/2017/08/28/Test-Deeply-Rendered-Vue-js-Components-in-Jest/</loc>
     
     <lastmod>2017-08-28T09:00:50.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/</loc>
-    
-    <lastmod>2017-08-21T06:27:05.000Z</lastmod>
     
   </url>
   
