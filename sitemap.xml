@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/09/18/Test-Computed-Properties-and-Watchers-in-Vue-js-Components-with-Jest/</loc>
+    
+    <lastmod>2017-09-18T09:25:20.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/09/11/Test-Properties-and-Custom-Events-in-Vue-js-Components-with-Jest/</loc>
     
     <lastmod>2017-09-11T07:33:28.000Z</lastmod>
