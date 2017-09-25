@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://alexjoverm.github.io/"/>
-  <updated>2017-09-18T09:25:20.000Z</updated>
+  <updated>2017-09-25T06:18:23.000Z</updated>
   <id>http://alexjoverm.github.io/</id>
   
   <author>
@@ -14,6 +14,150 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Test Methods and Mock Dependencies in Vue.js with Jest</title>
+    <link href="http://alexjoverm.github.io/2017/09/25/Test-Methods-and-Mock-Dependencies-in-Vue-js-with-Jest/"/>
+    <id>http://alexjoverm.github.io/2017/09/25/Test-Methods-and-Mock-Dependencies-in-Vue-js-with-Jest/</id>
+    <published>2017-09-25T06:18:23.000Z</published>
+    <updated>2017-09-25T06:18:23.000Z</updated>
+    
+    <content type="html"><![CDATA[<p>Learn how to test methods and cope with mocking module dependencies.</p>
+<a id="more"></a>
+<p>What should we test in methods? That’s a question that we had when we started doing unit tests. Everything comes down to <strong>test what that method do, and just that</strong>. This means we need to <strong>avoid calls to any dependency</strong>, so we’ll need to mock them.</p>
+<p>Let’s add a <code>onSubmit</code> event to the form in the <code>Form.vue</code> component that we created in the :</p>
+<pre class=" language-html"><code class="language-html">...
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>form</span> <span class="token attr-name">action</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span><span class="token punctuation">"</span></span> <span class="token attr-name">@submit.prevent</span><span class="token attr-value"><span class="token punctuation">=</span><span class="token punctuation">"</span>onSubmit(inputValue)<span class="token punctuation">"</span></span><span class="token punctuation">></span></span>
+...
+</code></pre>
+<p>The <code>.prevent</code> modifier is just a convenient way to call <code>event.preventDefault()</code> in order to don’t reload the page. Now make some modifications to call an api and store the result, by adding a <code>results</code> array to the data and a <code>onSubmit</code> method:</p>
+<pre class=" language-javascript"><code class="language-javascript">data<span class="token punctuation">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+  inputValue<span class="token punctuation">:</span> <span class="token string">''</span><span class="token punctuation">,</span>
+  results<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">,</span>
+methods<span class="token punctuation">:</span> <span class="token punctuation">{</span>
+  <span class="token function">onSubmit</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'https://jsonplaceholder.typicode.com/posts?q='</span> <span class="token operator">+</span> value<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>results <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+      <span class="token keyword">this</span><span class="token punctuation">.</span>results <span class="token operator">=</span> results<span class="token punctuation">.</span>data
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span>
+<span class="token operator">...</span>
+</code></pre>
+<p>The method is using axios to perform an HTTP call to the “posts” endpoint of jsonplaceholder, which is just a RESTful API for this kind of examples, and with the <code>q</code> query parameter we can search for posts, using the <code>value</code> provided as parameter.</p>
+<p>For testing the <code>onSubmit</code> method:</p>
+<ul>
+<li>We don’t wanna call <code>axios.get</code> actual method</li>
+<li>We wanna check it is calling axios (but not the real one) and it returns a promise</li>
+<li>That promise callback should set <code>this.results</code> to the promise result</li>
+</ul>
+<p>This is probably one of the hardest things to test, when you have external dependencies plus those return promises that do things inside. What we need to do is to <strong>mock the external dependencies</strong>.</p>
+<h2 id="Mock-External-Module-Dependencies"><a href="#Mock-External-Module-Dependencies" class="headerlink" title="Mock External Module Dependencies"></a>Mock External Module Dependencies</h2><p>Jest provides a really great mocking system that allows you to mock everything in a quite convenient way. You don’t need any extra libraries for that. We have seen already <code>jest.spyOn</code> and <code>jest.fn</code> for spying and creating stub functions, although that’s not enough for this case.</p>
+<p>We need to mock the whole <code>axios</code> module. Here’s where <code>jest.mock</code> comes into the stage. It allow us to easily mock module dependencies by writing at the top of you file:</p>
+<pre class=" language-javascript"><code class="language-javascript">jest<span class="token punctuation">.</span><span class="token function">mock</span><span class="token punctuation">(</span><span class="token string">'dependency-path'</span><span class="token punctuation">,</span> implementationFunction<span class="token punctuation">)</span>
+</code></pre>
+<p>You must know that <strong><code>jest.mock</code> is hoisted</strong>, which means it will be placed at the top. So:</p>
+<pre class=" language-javascript"><code class="language-javascript">jest<span class="token punctuation">.</span><span class="token function">mock</span><span class="token punctuation">(</span><span class="token string">'something'</span><span class="token punctuation">,</span> jest<span class="token punctuation">.</span>fn<span class="token punctuation">)</span>
+<span class="token keyword">import</span> foo <span class="token keyword">from</span> <span class="token string">'bar'</span>
+<span class="token operator">...</span>
+</code></pre>
+<p>Is equivalent to:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token keyword">import</span> foo <span class="token keyword">from</span> <span class="token string">'bar'</span>
+jest<span class="token punctuation">.</span><span class="token function">mock</span><span class="token punctuation">(</span><span class="token string">'something'</span><span class="token punctuation">,</span> jest<span class="token punctuation">.</span>fn<span class="token punctuation">)</span> <span class="token comment" spellcheck="true">// this will end up above all imports and everything</span>
+<span class="token operator">...</span>
+</code></pre>
+<p>By the date of writing, I still haven’t seen much info about how to do in Jest what we’re gonna do here on the internet. Lucky you don’t have to go through the same struggle.</p>
+<p>Let’s write the mock for axios at the top of the <code>Form.test.js</code> test file, and the corresponding test case:</p>
+<pre class=" language-javascript"><code class="language-javascript">jest<span class="token punctuation">.</span><span class="token function">mock</span><span class="token punctuation">(</span><span class="token string">'axios'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token keyword">get</span><span class="token punctuation">:</span> jest<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+<span class="token keyword">import</span> <span class="token punctuation">{</span> shallow <span class="token punctuation">}</span> <span class="token keyword">from</span> <span class="token string">'vue-test-utils'</span>
+<span class="token keyword">import</span> Form <span class="token keyword">from</span> <span class="token string">'../src/components/Form'</span>
+<span class="token keyword">import</span> axios <span class="token keyword">from</span> <span class="token string">'axios'</span> <span class="token comment" spellcheck="true">// axios here is the mock from above!</span>
+
+<span class="token operator">...</span>
+
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Calls axios.get'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  cmp<span class="token punctuation">.</span>vm<span class="token punctuation">.</span><span class="token function">onSubmit</span><span class="token punctuation">(</span><span class="token string">'an'</span><span class="token punctuation">)</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeCalledWith</span><span class="token punctuation">(</span><span class="token string">'https://jsonplaceholder.typicode.com/posts?q=an'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>This is great, we’re indeed mocking axios, so the original axios is not called nor any HTTP call. And, we’re even checking by using <code>toBeCalledWith</code> that it’s been called with the right parameters. But we’re still missing something: <strong><em>we’re not checking that it returns a promise</em></strong>.</p>
+<p>First we need to make our mocked <code>axios.get</code> method to return a promise. <code>jest.fn</code> accepts a factory function as a parameter, so we can use it to define its implementation:</p>
+<pre class=" language-javascript"><code class="language-javascript">jest<span class="token punctuation">.</span><span class="token function">mock</span><span class="token punctuation">(</span><span class="token string">'axios'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">(</span><span class="token punctuation">{</span>
+  <span class="token keyword">get</span><span class="token punctuation">:</span> jest<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token punctuation">:</span> <span class="token number">3</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre>
+<p>But still, we cannot access the promise, because we’re not returning it. In testing, is a good practice to return something from a function when possible, it makes testing much easier. Let’s do it then in the <code>onSubmit</code> method of the <code>Form.vue</code> component:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">onSubmit</span><span class="token punctuation">(</span>value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> getPromise <span class="token operator">=</span> axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">(</span><span class="token string">'https://jsonplaceholder.typicode.com/posts?q='</span> <span class="token operator">+</span> value<span class="token punctuation">)</span>
+
+  getPromise<span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span>results <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+    <span class="token keyword">this</span><span class="token punctuation">.</span>results <span class="token operator">=</span> results<span class="token punctuation">.</span>data
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">return</span> getPromise
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Then we can use the very clean ES2017 <code>async/await</code> syntax in the test to check the promise result:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Calls axios.get and checks promise result'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> cmp<span class="token punctuation">.</span>vm<span class="token punctuation">.</span><span class="token function">onSubmit</span><span class="token punctuation">(</span><span class="token string">'an'</span><span class="token punctuation">)</span>
+
+  <span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span>vm<span class="token punctuation">.</span>results<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeCalledWith</span><span class="token punctuation">(</span><span class="token string">'https://jsonplaceholder.typicode.com/posts?q=an'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>You can see that we don’t only check the promise result, but also that the <code>results</code> internal state of the component is updated as expected, by doing <code>expect(cmp.vm.results).toEqual([3])</code>.</p>
+<h2 id="Keep-mocks-externalized"><a href="#Keep-mocks-externalized" class="headerlink" title="Keep mocks externalized"></a>Keep mocks externalized</h2><p>Jest allows us to have all our mocks separated in their own JavaScript file, placing them under a <code>__mocks__</code> folder, keeping the tests as clean as possible.</p>
+<p>So we can take the <code>jest.mock...</code> block from top of the <code>Form.test.js</code> file out to it’s own file:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token comment" spellcheck="true">// test/__mocks__/axios.js</span>
+module<span class="token punctuation">.</span>exports <span class="token operator">=</span> <span class="token punctuation">{</span>
+  <span class="token keyword">get</span><span class="token punctuation">:</span> jest<span class="token punctuation">.</span><span class="token function">fn</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre>
+<p>Just like this, with no extra effort, Jest automatically applies the mock in all our tests so we don’t have to do anything extra or mocking it in every test manually. Notice the module name must match the file name. If you run the tests again, they should still pass.</p>
+<p>Keep in mind the modules registry and the mocks state is kept, so if you write another test afterwards, you may get undesired results:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Calls axios.get'</span><span class="token punctuation">,</span> <span class="token keyword">async</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> result <span class="token operator">=</span> <span class="token keyword">await</span> cmp<span class="token punctuation">.</span>vm<span class="token punctuation">.</span><span class="token function">onSubmit</span><span class="token punctuation">(</span><span class="token string">'an'</span><span class="token punctuation">)</span>
+
+  <span class="token function">expect</span><span class="token punctuation">(</span>result<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">{</span> data<span class="token punctuation">:</span> <span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>cmp<span class="token punctuation">.</span>vm<span class="token punctuation">.</span>results<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toEqual</span><span class="token punctuation">(</span><span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token punctuation">)</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeCalledWith</span><span class="token punctuation">(</span><span class="token string">'https://jsonplaceholder.typicode.com/posts?q=an'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token function">it</span><span class="token punctuation">(</span><span class="token string">'Axios should not be called here'</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  <span class="token function">expect</span><span class="token punctuation">(</span>axios<span class="token punctuation">.</span><span class="token keyword">get</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">toBeCalledWith</span><span class="token punctuation">(</span><span class="token string">'https://jsonplaceholder.typicode.com/posts?q=an'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>The second test should fail, but it doesn’t! That’s because <code>axios.get</code> was called on the test before.</p>
+<p>For that reason, it’s a good practice to clean the module registry and the mocks, since they’re manipulated by Jest in order to make mocking happen. For that you can add in your <code>beforeEach</code>:</p>
+<pre class=" language-javascript"><code class="language-javascript"><span class="token function">beforeEach</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=</span><span class="token operator">></span> <span class="token punctuation">{</span>
+  cmp <span class="token operator">=</span> <span class="token function">shallow</span><span class="token punctuation">(</span>Form<span class="token punctuation">)</span>
+  jest<span class="token punctuation">.</span><span class="token function">resetModules</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  jest<span class="token punctuation">.</span><span class="token function">clearAllMocks</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre>
+<p>That will ensure each test starts with clean mocks and modules, as it should be in unit testing.</p>
+<h2 id="Conclusion"><a href="#Conclusion" class="headerlink" title="Conclusion"></a>Conclusion</h2><p>Jest mocking feature, along with snapshot testing, are what I love the most of Jest! It makes very easy what usually is quite hard to test, and focus on writing faster and better isolated tests and keep your codebase bullet-proof.</p>
+<p>You can find the code of this article <a href="https://github.com/alexjoverm/vue-testing-series/tree/Test-State-Computed-Properties-and-Methods-in-Vue-js-Components-with-Jest" target="_blank" rel="external">in this repo</a>.</p>
+]]></content>
+    
+    <summary type="html">
+    
+      Learn how to test methods and cope with mocking module dependencies.
+    
+    </summary>
+    
+    
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
+    
+      <category term="JavaScript" scheme="http://alexjoverm.github.io/tags/JavaScript/"/>
+    
+      <category term="Testing" scheme="http://alexjoverm.github.io/tags/Testing/"/>
+    
+  </entry>
   
   <entry>
     <title>Test Computed Properties and Watchers in Vue.js Components with Jest</title>
@@ -1513,11 +1657,11 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
-      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
-    
       <category term="GraphQL" scheme="http://alexjoverm.github.io/tags/GraphQL/"/>
     
       <category term="Apollo" scheme="http://alexjoverm.github.io/tags/Apollo/"/>
+    
+      <category term="VueJS" scheme="http://alexjoverm.github.io/tags/VueJS/"/>
     
   </entry>
   
@@ -1606,9 +1750,9 @@ type BikePropTypes <span class="token operator">=</span> Bike<span class="token 
     </summary>
     
     
-      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
-    
       <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
+    
+      <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
     
   </entry>
   
