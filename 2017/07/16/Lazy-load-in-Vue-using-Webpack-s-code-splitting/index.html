@@ -76,15 +76,16 @@ autocomplete('#search-box', { hint: false, appendTo: 'body', debug: true }, {
   displayKey: 'name',
   //hash of templates used when rendering dataset
   templates: {
-  //'suggestion' templating function used to render a single suggestion
-  suggestion: function(suggestion) {
-    let link = '<a href="'+ suggestion.permalink +'">' +
-      suggestion._highlightResult.title.value + '</a>'
+    //'suggestion' templating function used to render a single suggestion
+    suggestion: function(suggestion) {
+      let link = '<a href="'+ suggestion.permalink +'">' +
+        suggestion._highlightResult.title.value + '</a>'
 
-    // @Todo: add <span> with type before the link
-    return link
+        // @Todo: add <span> with type before the link
+        return link
+      },
+      footer: '<div class="branding">Powered by <img src="https://www.algolia.com/static_assets/images/press/downloads/algolia-logo-light.svg" /></div>'
     }
-  }
 })
 </script><script>window.twttr = (function(d, s, id) {
 var js, fjs = d.getElementsByTagName(s)[0],
