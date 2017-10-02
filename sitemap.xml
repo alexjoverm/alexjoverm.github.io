@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/10/02/Test-Vue-js-Slots-in-Jest/</loc>
+    
+    <lastmod>2017-10-02T12:50:49.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/09/25/Test-Methods-and-Mock-Dependencies-in-Vue-js-with-Jest/</loc>
     
     <lastmod>2017-09-25T06:18:23.000Z</lastmod>
