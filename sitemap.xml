@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/</loc>
+    
+    <lastmod>2017-10-10T08:23:17.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/10/07/Enhance-Jest-configuration-with-Module-Aliases/</loc>
     
     <lastmod>2017-10-07T09:33:20.000Z</lastmod>
@@ -40,13 +47,6 @@
     <loc>http://alexjoverm.github.io/2017/09/11/Test-Properties-and-Custom-Events-in-Vue-js-Components-with-Jest/</loc>
     
     <lastmod>2017-09-11T07:33:28.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/2017/08/21/Write-the-first-Vue-js-Component-Unit-Test-in-Jest/</loc>
-    
-    <lastmod>2017-09-09T20:58:00.000Z</lastmod>
     
   </url>
   
