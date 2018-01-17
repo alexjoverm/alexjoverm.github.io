@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://alexjoverm.github.io/about/index.html</loc>
+    
+    <lastmod>2018-01-17T21:23:54.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://alexjoverm.github.io/2017/09/11/Test-Properties-and-Custom-Events-in-Vue-js-Components-with-Jest/</loc>
     
     <lastmod>2017-12-11T12:03:02.000Z</lastmod>
@@ -26,13 +33,6 @@
     <loc>http://alexjoverm.github.io/2017/11/13/My-tips-to-be-a-happier-developer/</loc>
     
     <lastmod>2017-11-13T13:58:35.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://alexjoverm.github.io/about/index.html</loc>
-    
-    <lastmod>2017-10-25T09:19:29.000Z</lastmod>
     
   </url>
   
