@@ -420,9 +420,9 @@
     </summary>
     
     
-      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
-    
       <category term="Webpack" scheme="http://alexjoverm.github.io/tags/Webpack/"/>
+    
+      <category term="TypeScript" scheme="http://alexjoverm.github.io/tags/TypeScript/"/>
     
   </entry>
   
